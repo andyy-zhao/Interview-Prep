@@ -1,4 +1,4 @@
-import { Check, Plus, Pencil } from "lucide-react";
+import { Check, Plus, Pencil, ArrowUpRight } from "lucide-react";
 import {
   minutes,
   type RecordData,
@@ -80,6 +80,13 @@ export function TaskRow({
   task: RecordData;
   props: PageProps;
 }) {
+  const problem = task.category === "LeetCode"
+    ? props.data.leetcode_problems.find((p) => p.id === task.problem_id)
+    : undefined;
+  const problemUrl = typeof problem?.url === "string" && problem.url.startsWith("https://")
+    ? problem.url
+    : undefined;
+  const tagClass = "tag " + String(task.category).toLowerCase().replaceAll(" ", "-");
   return (
     <div className="task">
       <button
@@ -107,13 +114,20 @@ export function TaskRow({
           {String(task.end_time).slice(0, 5)} <span>·</span> {minutes(task)} min
         </small>
       </button>
-      <span
-        className={
-          "tag " + String(task.category).toLowerCase().replaceAll(" ", "-")
-        }
-      >
-        {task.category}
-      </span>
+      {problemUrl ? (
+        <a
+          className={tagClass + " problem-link"}
+          href={problemUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${problem?.title} on LeetCode (new tab)`}
+          title={`Open ${problem?.title} on LeetCode (new tab)`}
+        >
+          LeetCode <ArrowUpRight size={12} aria-hidden="true" />
+        </a>
+      ) : (
+        <span className={tagClass}>{task.category}</span>
+      )}
       <button
         className="icon-button"
         aria-label={"Edit " + task.title}

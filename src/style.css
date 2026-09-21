@@ -1214,3 +1214,15 @@ body:has(dialog[open]) { overflow: hidden; }
   .detail-body { padding: 20px; }
   .modal-actions { flex-wrap: wrap; }
 }
+
+.tag.problem-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tag.problem-link:hover {
+  background: #ebe1b9;
+  color: #755d25;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
