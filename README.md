@@ -71,3 +71,13 @@ Live integration is verified separately with temporary records. On databases cre
 ## Git / GitHub
 
 This directory is an independent Git repository. The `origin` remote is https://github.com/andyy-zhao/Interview-Prep.git. `.env` is ignored; verify `git status` before committing. The SQL schema, source, lockfile, and seed templates belong in Git.
+
+## Scheduled LeetCode sessions
+
+Run `supabase/migrations/20260921222210_scheduled_attempt_sessions.sql` in the SQL editor after migrations 001 and 002, then restart `npm run dev`. Existing attempts and reviews are preserved; older attempts are not guessed or backfilled onto tasks.
+
+Today and Week use **Finish session** (or the task checkbox) for linked LeetCode tasks. The form saves solved status, time, hints, perceived difficulty, mastery, reflection, complexity analysis, and the next review date. Saving records the attempt, updates the problem/review, and completes the task in one database transaction. Quick actions are staged until Save. The task then shows its result and opens read-only details. Standalone attempts remain in the problem library and never complete unrelated tasks.
+
+One attempt per task is enforced with a unique partial index and row locking, including retries with different request IDs. Retrying an existing result does not overwrite its history or reschedule another review. Unchecking a completed task in its task editor does not delete its result; create a new task for another practice session.
+
+Run `node scripts/session-check.mjs` against the running API for live session integration checks. It inserts uniquely identified temporary records and removes only those fixtures. Override `TEST_API_URL` if needed. For an isolated dev check, both the API and Vite proxy accept `API_PORT`.

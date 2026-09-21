@@ -268,7 +268,12 @@ function ProblemDetail({
     return () => ref.current?.close();
   }, []);
   return (
-    <dialog ref={ref} className="editor detail" aria-labelledby="problem-detail-title" onCancel={onClose}>
+    <dialog
+      ref={ref}
+      className="editor detail"
+      aria-labelledby="problem-detail-title"
+      onCancel={onClose}
+    >
       <div className="modal-heading">
         <div>
           <div className="eyebrow">{p.pattern || "PROBLEM DETAILS"}</div>
@@ -356,6 +361,15 @@ function ProblemDetail({
                 {a.perceived_difficulty || "unrated"}
               </small>
               <p className="preserve">{a.notes}</p>
+              <button
+                className="small-button"
+                onClick={() => {
+                  onClose();
+                  props.edit({ table: "leetcode_attempts", record: a });
+                }}
+              >
+                View full result
+              </button>
             </div>
           ))}
         <h3>Review history</h3>

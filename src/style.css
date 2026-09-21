@@ -1208,11 +1208,21 @@ td small,
   }
 }
 
-body:has(dialog[open]) { overflow: hidden; }
+body:has(dialog[open]) {
+  overflow: hidden;
+}
 @media (max-width: 650px) {
-  .editor { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); border-radius: 12px; }
-  .detail-body { padding: 20px; }
-  .modal-actions { flex-wrap: wrap; }
+  .editor {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+    border-radius: 12px;
+  }
+  .detail-body {
+    padding: 20px;
+  }
+  .modal-actions {
+    flex-wrap: wrap;
+  }
 }
 
 .tag.problem-link {
@@ -1225,4 +1235,81 @@ body:has(dialog[open]) { overflow: hidden; }
   color: #755d25;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.task-session {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 7px;
+  margin-left: auto;
+}
+.task-session .session-summary {
+  font-size: 10px;
+  color: #62745b;
+  margin: 0;
+}
+.session-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.session-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.session-intro {
+  padding: 18px 28px 0;
+}
+.review-controls {
+  padding: 0 28px 24px;
+}
+.review-controls .quick-actions {
+  margin: 12px 0;
+}
+.review-controls [aria-pressed="true"] {
+  background: #e0ecdb;
+  border-color: #6c9160;
+}
+.review-controls label {
+  display: block;
+  margin-top: 16px;
+  font-size: 12px;
+}
+.review-controls input {
+  display: block;
+  margin-top: 7px;
+  border: 1px solid #d9e2d4;
+  border-radius: 6px;
+  padding: 9px;
+  background: white;
+}
+.complexity-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.complexity-details dt {
+  font-size: 11px;
+  color: #718064;
+}
+.complexity-details dd {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+.complexity-details > div:last-child {
+  grid-column: 1/-1;
+}
+@media (max-width: 650px) {
+  .task-session {
+    align-items: flex-start;
+    margin-left: 31px;
+  }
+  .complexity-details {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,3 +1,6 @@
+import { AttemptEditor } from "./components/AttemptEditor";
+import { AttemptDetails } from "./components/AttemptDetails";
+import { attemptSchema } from "./domain/attempts";
 import { useState, useEffect, useCallback } from "react";
 import { NavLink, Routes, Route, useLocation } from "react-router-dom";
 import {
@@ -108,7 +111,9 @@ export default function App() {
     }
   };
   const save = (table: Table, row: RecordData) =>
-    table === "leetcode_attempts" ? api.attempt(row) : api.save(table, row);
+    table === "leetcode_attempts"
+      ? api.attempt(attemptSchema.parse(row))
+      : api.save(table, row);
   const path = useLocation().pathname;
   const name = nav.find((n) => n[2] === path)?.[0] || "Not found";
   const props = { data, configured, busy, edit: setSpec, mutate, save };
@@ -288,18 +293,50 @@ export default function App() {
           {toast}
         </div>
       )}
-      {spec && (
-        <Editor
-          key={spec.record?.id || spec.table}
-          spec={spec}
-          problems={data.leetcode_problems}
-          configured={configured}
-          onClose={() => setSpec(null)}
-          onSave={async (table, row) => run(() => save(table, row))}
-          onDelete={async (table, id) =>
-            run(() => api.remove(table, id), "Record deleted")
-          }
-        />
+      {spec?.table === "leetcode_attempts" ? (
+        spec.record ? (
+          <AttemptDetails
+            attempt={spec.record}
+            problem={data.leetcode_problems.find(
+              (p) => p.id === spec.record?.problem_id,
+            )}
+            onClose={() => setSpec(null)}
+          />
+        ) : (
+          <AttemptEditor
+            key={String(spec.defaults?.task_id || spec.defaults?.problem_id)}
+            problem={
+              data.leetcode_problems.find(
+                (p) => p.id === spec.defaults?.problem_id,
+              )!
+            }
+            task={data.tasks.find((t) => t.id === spec.defaults?.task_id)}
+            configured={configured}
+            onClose={() => setSpec(null)}
+            onSave={async (attempt) =>
+              run(
+                () => api.attempt(attempt),
+                attempt.task_id
+                  ? "Session recorded · task complete · review updated"
+                  : "Attempt recorded · review updated",
+              )
+            }
+          />
+        )
+      ) : (
+        spec && (
+          <Editor
+            key={spec.record?.id || spec.table}
+            spec={spec}
+            problems={data.leetcode_problems}
+            configured={configured}
+            onClose={() => setSpec(null)}
+            onSave={async (table, row) => run(() => save(table, row))}
+            onDelete={async (table, id) =>
+              run(() => api.remove(table, id), "Record deleted")
+            }
+          />
+        )
       )}
     </div>
   );

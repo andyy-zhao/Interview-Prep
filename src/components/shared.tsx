@@ -1,3 +1,4 @@
+import { sessionAttempt } from "../domain/attempts";
 import { Check, Plus, Pencil, ArrowUpRight } from "lucide-react";
 import {
   minutes,
@@ -80,24 +81,44 @@ export function TaskRow({
   task: RecordData;
   props: PageProps;
 }) {
-  const problem = task.category === "LeetCode"
-    ? props.data.leetcode_problems.find((p) => p.id === task.problem_id)
-    : undefined;
-  const problemUrl = typeof problem?.url === "string" && problem.url.startsWith("https://")
-    ? problem.url
-    : undefined;
-  const tagClass = "tag " + String(task.category).toLowerCase().replaceAll(" ", "-");
+  const problem =
+    task.category === "LeetCode"
+      ? props.data.leetcode_problems.find((p) => p.id === task.problem_id)
+      : undefined;
+  const problemUrl =
+    typeof problem?.url === "string" && problem.url.startsWith("https://")
+      ? problem.url
+      : undefined;
+  const result = sessionAttempt(props.data.leetcode_attempts, task);
+  const finish = () =>
+    props.edit(
+      result
+        ? { table: "leetcode_attempts", record: result }
+        : {
+            table: "leetcode_attempts",
+            defaults: { problem_id: problem?.id, task_id: task.id },
+          },
+    );
+  const tagClass =
+    "tag " + String(task.category).toLowerCase().replaceAll(" ", "-");
   return (
     <div className="task">
       <button
         className={"checkbox " + (task.completed ? "checked" : "")}
-        aria-label={(task.completed ? "Uncomplete " : "Complete ") + task.title}
+        aria-label={
+          problem
+            ? (result ? "View result for " : "Finish session for ") + task.title
+            : (task.completed ? "Uncomplete " : "Complete ") + task.title
+        }
         disabled={!props.configured || props.busy}
         onClick={() =>
-          void props.mutate(
-            () => props.save("tasks", { ...task, completed: !task.completed }),
-            "Task updated",
-          )
+          problem
+            ? finish()
+            : void props.mutate(
+                () =>
+                  props.save("tasks", { ...task, completed: !task.completed }),
+                "Task updated",
+              )
         }
       >
         {task.completed && <Check size={13} />}
@@ -114,6 +135,23 @@ export function TaskRow({
           {String(task.end_time).slice(0, 5)} <span>·</span> {minutes(task)} min
         </small>
       </button>
+      {problem && (
+        <div className="task-session">
+          {result && (
+            <small className="session-summary">
+              {result.solved ? "Solved" : "Not solved"} · {result.time_spent}{" "}
+              min · {result.mastery_after}
+            </small>
+          )}
+          <button
+            className="small-button"
+            disabled={props.busy}
+            onClick={finish}
+          >
+            {result ? "View result" : "Finish session"}
+          </button>
+        </div>
+      )}
       {problemUrl ? (
         <a
           className={tagClass + " problem-link"}

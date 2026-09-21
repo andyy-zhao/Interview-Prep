@@ -1,3 +1,4 @@
+import { attemptSchema } from "../src/domain/attempts";
 import "dotenv/config";
 import express from "express";
 import { createClient } from "@supabase/supabase-js";
@@ -66,14 +67,15 @@ app.use("/api", (_req, res, next) => {
 });
 app.post("/api/attempt", async (req, res) => {
   try {
-    const data = schemaFor("leetcode_attempts").parse(req.body);
-    const { error } = await db!.rpc("record_practice", {
-      p_problem_id: data.problem_id,
-      p_today: dateKey(),
+    const data = attemptSchema.parse(req.body);
+    const { data: result, error } = await db!.rpc("record_attempt_session", {
       p_attempt: data,
+      p_today: new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Toronto",
+      }).format(new Date()),
     });
     if (error) throw error;
-    res.json({ ok: true });
+    res.json({ ok: true, ...result });
   } catch (e) {
     res.status(400).json({ error: errorText(e) });
   }
@@ -162,6 +164,7 @@ function errorText(e: unknown) {
         ? String(e.message)
         : "Database operation failed. Please try again.";
 }
-app.listen(3001, "127.0.0.1", () =>
-  console.log("Local API: http://127.0.0.1:3001"),
+const port = Number(process.env.API_PORT || 3001);
+app.listen(port, "127.0.0.1", () =>
+  console.log(`Local API: http://127.0.0.1:${port}`),
 );

@@ -1,7 +1,9 @@
+import { attemptSchema } from "./attempts";
 import { z } from "zod";
 import configs from "./fields.json";
 import type { Table } from "./types";
 export function schemaFor(table: Table) {
+  if (table === "leetcode_attempts") return attemptSchema;
   const shape: Record<string, z.ZodTypeAny> = { id: z.string().uuid() };
   const fields = configs[table as keyof typeof configs];
   if (!fields) throw new Error("This record is read-only.");
