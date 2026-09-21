@@ -1,0 +1,391 @@
+{
+  "tasks": [
+    {
+      "key": "title",
+      "label": "Task",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "category",
+      "label": "Category",
+      "type": "select",
+      "options": [
+        "LeetCode",
+        "System Design",
+        "Behavioral",
+        "Achievers",
+        "Other"
+      ],
+      "required": true
+    },
+    {
+      "key": "scheduled_date",
+      "label": "Scheduled date",
+      "type": "date",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "start_time",
+      "label": "Start time",
+      "type": "time",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "end_time",
+      "label": "End time",
+      "type": "time",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "block",
+      "label": "Time block",
+      "type": "text"
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "type": "textarea"
+    },
+    {
+      "key": "problem_id",
+      "label": "Linked problem",
+      "type": "problem"
+    },
+    {
+      "key": "completed",
+      "label": "Completed",
+      "type": "checkbox"
+    }
+  ],
+  "leetcode_problems": [
+    {
+      "key": "title",
+      "label": "Problem title",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "url",
+      "label": "LeetCode URL",
+      "type": "url"
+    },
+    {
+      "key": "difficulty",
+      "label": "Difficulty",
+      "type": "select",
+      "options": ["Easy", "Medium", "Hard"],
+      "required": true
+    },
+    {
+      "key": "topics",
+      "label": "Topics (comma-separated)",
+      "type": "text"
+    },
+    {
+      "key": "pattern",
+      "label": "Primary pattern",
+      "type": "text"
+    },
+    {
+      "key": "mastery",
+      "label": "Mastery",
+      "type": "select",
+      "options": ["RED", "ORANGE", "YELLOW", "GREEN"],
+      "required": true
+    },
+    {
+      "key": "active",
+      "label": "Active learning",
+      "type": "checkbox"
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "type": "textarea"
+    },
+    {
+      "key": "first_attempted_date",
+      "label": "First attempted",
+      "type": "date"
+    },
+    {
+      "key": "last_attempted_date",
+      "label": "Last attempted",
+      "type": "date"
+    },
+    {
+      "key": "next_review_date",
+      "label": "Next review",
+      "type": "date"
+    },
+    {
+      "key": "review_stage",
+      "label": "Review stage",
+      "type": "number"
+    }
+  ],
+  "leetcode_attempts": [
+    {
+      "key": "problem_id",
+      "label": "Problem",
+      "type": "problem",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "attempted_at",
+      "label": "Attempt time",
+      "type": "datetime-local",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "solved",
+      "label": "Solved independently",
+      "type": "checkbox"
+    },
+    {
+      "key": "time_spent",
+      "label": "Time spent (minutes)",
+      "type": "number",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "hints_used",
+      "label": "Hints used",
+      "type": "number"
+    },
+    {
+      "key": "perceived_difficulty",
+      "label": "Perceived difficulty",
+      "type": "select",
+      "options": ["Easy", "Medium", "Hard"]
+    },
+    {
+      "key": "mastery_after",
+      "label": "Mastery after attempt",
+      "type": "select",
+      "options": ["RED", "ORANGE", "YELLOW", "GREEN"],
+      "required": true
+    },
+    {
+      "key": "notes",
+      "label": "Notes / what to improve",
+      "type": "textarea"
+    }
+  ],
+  "system_design_topics": [
+    {
+      "key": "title",
+      "label": "Topic",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "status",
+      "label": "Learning status",
+      "type": "select",
+      "options": ["Not started", "Learning", "Learned"],
+      "required": true
+    },
+    {
+      "key": "confidence",
+      "label": "Confidence (1\u20135)",
+      "type": "number"
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "type": "textarea"
+    },
+    {
+      "key": "last_reviewed",
+      "label": "Last reviewed",
+      "type": "date"
+    }
+  ],
+  "system_design_exercises": [
+    {
+      "key": "title",
+      "label": "Exercise",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "status",
+      "label": "Status",
+      "type": "select",
+      "options": ["Not started", "In progress", "Completed"],
+      "required": true
+    },
+    {
+      "key": "date_attempted",
+      "label": "Date attempted",
+      "type": "date"
+    },
+    {
+      "key": "confidence",
+      "label": "Confidence (1\u20135)",
+      "type": "number"
+    },
+    {
+      "key": "notes",
+      "label": "Design notes",
+      "type": "textarea"
+    },
+    {
+      "key": "weaknesses",
+      "label": "Weaknesses",
+      "type": "textarea"
+    },
+    {
+      "key": "revisit",
+      "label": "Areas to revisit",
+      "type": "textarea"
+    }
+  ],
+  "behavioral_stories": [
+    {
+      "key": "title",
+      "label": "Story title",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "themes",
+      "label": "Themes (comma-separated)",
+      "type": "text"
+    },
+    {
+      "key": "status",
+      "label": "Status",
+      "type": "select",
+      "options": ["idea", "rough", "refined", "interview-ready"],
+      "required": true
+    },
+    {
+      "key": "situation",
+      "label": "Situation",
+      "type": "textarea"
+    },
+    {
+      "key": "task",
+      "label": "Task",
+      "type": "textarea"
+    },
+    {
+      "key": "action",
+      "label": "Action",
+      "type": "textarea"
+    },
+    {
+      "key": "result",
+      "label": "Result",
+      "type": "textarea"
+    },
+    {
+      "key": "lessons",
+      "label": "Lessons learned",
+      "type": "textarea"
+    },
+    {
+      "key": "confidence",
+      "label": "Confidence (1\u20135)",
+      "type": "number"
+    }
+  ],
+  "achievers_projects": [
+    {
+      "key": "title",
+      "label": "Project name",
+      "type": "text",
+      "options": null,
+      "required": true
+    },
+    {
+      "key": "summary",
+      "label": "Short summary",
+      "type": "textarea"
+    },
+    {
+      "key": "business_problem",
+      "label": "Business problem",
+      "type": "textarea"
+    },
+    {
+      "key": "ownership",
+      "label": "My ownership / contribution",
+      "type": "textarea"
+    },
+    {
+      "key": "technologies",
+      "label": "Technologies",
+      "type": "text"
+    },
+    {
+      "key": "architecture",
+      "label": "Architecture",
+      "type": "textarea"
+    },
+    {
+      "key": "implementation",
+      "label": "Implementation details",
+      "type": "textarea"
+    },
+    {
+      "key": "challenges",
+      "label": "Challenges",
+      "type": "textarea"
+    },
+    {
+      "key": "tradeoffs",
+      "label": "Tradeoffs",
+      "type": "textarea"
+    },
+    {
+      "key": "rollout",
+      "label": "Rollout / deployment",
+      "type": "textarea"
+    },
+    {
+      "key": "testing",
+      "label": "Testing",
+      "type": "textarea"
+    },
+    {
+      "key": "reliability",
+      "label": "Reliability considerations",
+      "type": "textarea"
+    },
+    {
+      "key": "impact",
+      "label": "Measurable impact",
+      "type": "textarea"
+    },
+    {
+      "key": "questions",
+      "label": "Questions to research",
+      "type": "textarea"
+    },
+    {
+      "key": "confidence",
+      "label": "Interview confidence (1\u20135)",
+      "type": "number"
+    },
+    {
+      "key": "interview_ready",
+      "label": "Interview-ready",
+      "type": "checkbox"
+    }
+  ]
+}
