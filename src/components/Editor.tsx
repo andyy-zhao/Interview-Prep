@@ -94,6 +94,7 @@ export function Editor({
   return (
     <dialog
       ref={dialog}
+      aria-labelledby="record-editor-title"
       onCancel={(e) => {
         e.preventDefault();
         close();
@@ -104,7 +105,7 @@ export function Editor({
         <div className="modal-heading">
           <div>
             <div className="eyebrow">{spec.table.replaceAll("_", " ")}</div>
-            <h2>
+            <h2 id="record-editor-title">
               {spec.table === "leetcode_attempts"
                 ? "Record attempt"
                 : spec.record

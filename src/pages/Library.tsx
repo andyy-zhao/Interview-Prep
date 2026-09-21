@@ -268,11 +268,11 @@ function ProblemDetail({
     return () => ref.current?.close();
   }, []);
   return (
-    <dialog ref={ref} className="editor detail" onCancel={onClose}>
+    <dialog ref={ref} className="editor detail" aria-labelledby="problem-detail-title" onCancel={onClose}>
       <div className="modal-heading">
         <div>
           <div className="eyebrow">{p.pattern || "PROBLEM DETAILS"}</div>
-          <h2>{p.title}</h2>
+          <h2 id="problem-detail-title">{p.title}</h2>
         </div>
         <button aria-label="Close details" onClick={onClose}>
           <X size={18} />

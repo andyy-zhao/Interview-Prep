@@ -709,17 +709,23 @@ footer {
   color: #7b8c7b;
 }
 .editor {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding: 0;
   border: 1px solid #dde6dc;
-  border-radius: 12px;
+  border-radius: 16px;
   width: min(720px, calc(100vw - 32px));
-  max-height: 90vh;
+  max-height: calc(100dvh - 48px);
   background: #fbfcf9;
   color: #263c2d;
   box-shadow: 0 30px 100px #18302530;
 }
 .editor::backdrop {
-  background: #18302166;
+  background: #14271e55;
   backdrop-filter: blur(2px);
 }
 .modal-heading {
@@ -733,11 +739,20 @@ footer {
   background: #fbfcf9;
   z-index: 2;
 }
+.modal-heading > div {
+  min-width: 0;
+}
 .modal-heading h2 {
+  overflow-wrap: anywhere;
+  line-height: 1.35;
   margin-top: 7px;
   font-size: 20px;
 }
 .modal-heading button {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: 16px;
   background: transparent;
   border: 0;
 }
@@ -971,6 +986,14 @@ td small,
 .due small {
   color: #b78b4c;
 }
+.detail .button-group {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.detail-body > h3 {
+  font-size: 14px;
+  margin: 28px 0 12px;
+}
 .detail-body {
   padding: 24px 28px;
 }
@@ -980,10 +1003,12 @@ td small,
 .quick-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
   margin: 24px 0;
 }
 .quick-actions button {
+  padding: 14px 16px;
+  border-radius: 9px;
   display: block;
   text-align: left;
   font-size: 12px;
@@ -992,21 +1017,27 @@ td small,
   display: block;
   margin-top: 5px;
   font-size: 10px;
-  color: #95a18c;
+  color: #6c7f65;
 }
 .history-row {
-  border-bottom: 1px solid #e1e9da;
-  padding: 16px 0;
+  border: 1px solid #e1e9da;
+  border-radius: 9px;
+  background: white;
+  margin: 10px 0;
+  padding: 16px;
   font-size: 12px;
 }
 .history-row > span {
-  float: right;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 12px;
   font-size: 10px;
 }
 .history-row small {
   display: block;
-  color: #8b9c7d;
-  font-size: 10px;
+  color: #6e8063;
+  font-size: 11px;
   margin-top: 7px;
 }
 .preserve {
@@ -1175,4 +1206,11 @@ td small,
   .status-dot {
     font-size: 9px;
   }
+}
+
+body:has(dialog[open]) { overflow: hidden; }
+@media (max-width: 650px) {
+  .editor { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); border-radius: 12px; }
+  .detail-body { padding: 20px; }
+  .modal-actions { flex-wrap: wrap; }
 }
