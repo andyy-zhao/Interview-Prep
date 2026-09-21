@@ -15,6 +15,7 @@ export const attemptSchema = z
     attempted_at: z.string().datetime(),
     solved: z.boolean(),
     time_spent: z.number().int().min(0).max(100000),
+    time_spent_seconds: z.number().int().min(0).max(59).default(0),
     hints_used: z.number().int().min(0).max(100000),
     perceived_difficulty: z.enum(["Easy", "Medium", "Hard"]),
     mastery_after: z.enum(["RED", "ORANGE", "YELLOW", "GREEN"]),
@@ -81,4 +82,12 @@ export function suggestedReview(
 }
 export function sessionAttempt(attempts: RecordData[], task: RecordData) {
   return attempts.find((a) => a.task_id === task.id);
+}
+
+export function formatAttemptDuration(attempt: RecordData) {
+  const minutes = Number(attempt.time_spent || 0);
+  const seconds = Number(attempt.time_spent_seconds || 0);
+  return seconds
+    ? `${minutes}m ${String(seconds).padStart(2, "0")}s`
+    : `${minutes} min`;
 }

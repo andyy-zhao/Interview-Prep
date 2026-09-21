@@ -1,6 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { attemptSchema, suggestedReview, sessionAttempt } from "./attempts";
+import {
+  attemptSchema,
+  suggestedReview,
+  sessionAttempt,
+  formatAttemptDuration,
+} from "./attempts";
 const base = {
   id: "90502292-d699-4313-b384-c341a189e778",
   problem_id: "756cf32f-3b79-4d7e-8c46-c0dfdeeb4b6b",
@@ -68,4 +73,26 @@ test("session association uses task ID, never problem or date guessing", () => {
   ];
   assert.equal(sessionAttempt(attempts, { id: "task-one" })?.id, "a");
   assert.equal(sessionAttempt(attempts, { id: "task-two" }), undefined);
+});
+
+test("seconds validate and old minute-only durations stay compatible", () => {
+  assert.equal(attemptSchema.parse(base).time_spent_seconds, 0);
+  assert.equal(
+    attemptSchema.parse({ ...base, time_spent_seconds: 37 }).time_spent_seconds,
+    37,
+  );
+  for (const seconds of [-1, 60, 1.5])
+    assert.equal(
+      attemptSchema.safeParse({ ...base, time_spent_seconds: seconds }).success,
+      false,
+    );
+  assert.equal(
+    formatAttemptDuration({ ...base, time_spent_seconds: 7 }),
+    "28m 07s",
+  );
+  assert.equal(formatAttemptDuration(base), "28 min");
+  assert.equal(
+    formatAttemptDuration({ ...base, time_spent: 0, time_spent_seconds: 45 }),
+    "0m 45s",
+  );
 });

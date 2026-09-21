@@ -1,4 +1,4 @@
-import { sessionAttempt } from "../domain/attempts";
+import { sessionAttempt, formatAttemptDuration } from "../domain/attempts";
 import { Check, Plus, Pencil, ArrowUpRight } from "lucide-react";
 import {
   minutes,
@@ -139,8 +139,8 @@ export function TaskRow({
         <div className="task-session">
           {result && (
             <small className="session-summary">
-              {result.solved ? "Solved" : "Not solved"} · {result.time_spent}{" "}
-              min · {result.mastery_after}
+              {result.solved ? "Solved" : "Not solved"} ·{" "}
+              {formatAttemptDuration(result)} · {result.mastery_after}
             </small>
           )}
           <button

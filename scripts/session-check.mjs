@@ -26,6 +26,7 @@ const attempt = (task = taskId) => ({
   attempted_at: new Date().toISOString(),
   solved: true,
   time_spent: 28,
+  time_spent_seconds: 37,
   hints_used: 2,
   perceived_difficulty: "Medium",
   mastery_after: "YELLOW",
@@ -71,6 +72,7 @@ try {
   let rows = data.leetcode_attempts.filter((a) => a.task_id === taskId);
   assert.equal(rows.length, 1);
   assert.equal(rows[0].worst_case_complexity, "O(n²)");
+  assert.equal(rows[0].time_spent_seconds, 37);
   assert.equal(data.tasks.find((t) => t.id === taskId).completed, true);
   assert.equal(data.tasks.find((t) => t.id === secondTaskId).completed, false);
   assert.equal(

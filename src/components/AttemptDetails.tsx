@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { complexityFields } from "../domain/attempts";
+import { complexityFields, formatAttemptDuration } from "../domain/attempts";
 import type { RecordData } from "../domain/types";
 export function AttemptDetails({
   attempt: a,
@@ -40,7 +40,7 @@ export function AttemptDetails({
       <div className="detail-body">
         <p>{new Date(String(a.attempted_at)).toLocaleString()}</p>
         <div className="session-summary">
-          {a.solved ? "Solved" : "Not solved"} · {a.time_spent} min ·{" "}
+          {a.solved ? "Solved" : "Not solved"} · {formatAttemptDuration(a)} ·{" "}
           {a.hints_used || 0} hints ·{" "}
           <span className="mastery-label">
             <i className={"mastery-dot " + a.mastery_after} />

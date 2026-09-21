@@ -81,3 +81,5 @@ Today and Week use **Finish session** (or the task checkbox) for linked LeetCode
 One attempt per task is enforced with a unique partial index and row locking, including retries with different request IDs. Retrying an existing result does not overwrite its history or reschedule another review. Unchecking a completed task in its task editor does not delete its result; create a new task for another practice session.
 
 Run `node scripts/session-check.mjs` against the running API for live session integration checks. It inserts uniquely identified temporary records and removes only those fixtures. Override `TEST_API_URL` if needed. For an isolated dev check, both the API and Vite proxy accept `API_PORT`.
+
+For seconds precision, also run `supabase/migrations/20260921223334_attempt_duration_seconds.sql`. Enter minutes and seconds (0–59) separately; old attempts retain their original minutes with zero seconds.

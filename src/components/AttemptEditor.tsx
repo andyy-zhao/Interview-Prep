@@ -27,6 +27,7 @@ export function AttemptEditor({
     attempted_at: new Date().toISOString(),
     solved: false,
     time_spent: 0,
+    time_spent_seconds: 0,
     hints_used: 0,
     perceived_difficulty: "Medium",
     mastery_after: (problem.mastery as AttemptInput["mastery_after"]) || "RED",
@@ -203,6 +204,24 @@ export function AttemptEditor({
                 required
                 value={Number.isNaN(value.time_spent) ? "" : value.time_spent}
                 onChange={(e) => change({ time_spent: e.target.valueAsNumber })}
+              />
+            </label>
+            <label>
+              Time spent (seconds)
+              <input
+                type="number"
+                min="0"
+                max="59"
+                step="1"
+                required
+                value={
+                  Number.isNaN(value.time_spent_seconds)
+                    ? ""
+                    : value.time_spent_seconds
+                }
+                onChange={(e) =>
+                  change({ time_spent_seconds: e.target.valueAsNumber })
+                }
               />
             </label>
             <label>

@@ -1,3 +1,4 @@
+import { formatAttemptDuration } from "../domain/attempts";
 import { useState, useEffect, useRef } from "react";
 import { X, ArrowUpRight, Search } from "lucide-react";
 import { api } from "../data/api";
@@ -349,8 +350,8 @@ function ProblemDetail({
           .map((a) => (
             <div className="history-row" key={a.id}>
               <strong>
-                {a.solved ? "Solved" : "Not solved"} · {a.time_spent} min ·{" "}
-                {a.hints_used || 0} hints
+                {a.solved ? "Solved" : "Not solved"} ·{" "}
+                {formatAttemptDuration(a)} · {a.hints_used || 0} hints
               </strong>
               <span>
                 <i className={"mastery-dot " + a.mastery_after} />{" "}
