@@ -1431,3 +1431,41 @@ body:has(dialog[open]) {
   color: #226c52;
   border-bottom-color: #6f9765;
 }
+
+/* Override sidebar navigation rules for the horizontal Behavioral tabs. */
+nav.behavioral-tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 20px;
+  margin: 0 0 24px;
+}
+nav.behavioral-tabs a {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 4px;
+  font-size: 13px;
+}
+nav.behavioral-tabs a.active {
+  background: transparent;
+  color: #226c52;
+  border-bottom: 2px solid #6f9765;
+}
+.story-extras summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: revert;
+}
+.story-extras[open] summary {
+  margin-bottom: 16px;
+}
+.story-extra-row {
+  border-top: 1px solid #e5ebe5;
+  padding: 18px 0;
+}
+.story-editor-options {
+  padding: 12px 28px 0;
+}

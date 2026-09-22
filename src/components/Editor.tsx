@@ -61,6 +61,7 @@ export function Editor({
       ...spec.record,
     };
   });
+  const [showExtraStoryFields, setShowExtraStoryFields] = useState(false);
   const [busy, setBusy] = useState(false);
   const submitting = useRef(false);
   const [error, setError] = useState("");
@@ -152,12 +153,36 @@ export function Editor({
             {error}
           </div>
         )}
+        {spec.table === "behavioral_stories" && !spec.fieldKeys && (
+          <div className="story-editor-options">
+            <button
+              type="button"
+              aria-expanded={showExtraStoryFields}
+              onClick={() => setShowExtraStoryFields(!showExtraStoryFields)}
+            >
+              {showExtraStoryFields
+                ? "Hide optional fields"
+                : "More details & tags"}
+            </button>
+          </div>
+        )}
         <div className="form-fields">
           {fields
             .filter(
               (f) =>
                 f.key !== "review_stage" &&
-                (!spec.fieldKeys || spec.fieldKeys.includes(f.key)),
+                (!spec.fieldKeys || spec.fieldKeys.includes(f.key)) &&
+                (spec.table !== "behavioral_stories" ||
+                  spec.fieldKeys ||
+                  showExtraStoryFields ||
+                  ![
+                    "technical_details",
+                    "challenges",
+                    "useful_angles",
+                    "leadership_principles",
+                    "confidence",
+                    "project_name",
+                  ].includes(f.key)),
             )
             .map((f) => {
               const raw = value[f.key];

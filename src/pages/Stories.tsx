@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams, useLocation } from "react-router-dom";
 import {
   Heading,
   AddButton,
@@ -14,6 +14,31 @@ import {
   storySections,
   questionSections,
 } from "../domain/stories";
+function BehavioralTabs({ story = false }: { story?: boolean }) {
+  const { pathname } = useLocation();
+  return (
+    <nav className="tabs behavioral-tabs" aria-label="Behavioral sections">
+      <NavLink
+        end
+        to="/behavioral"
+        className={({ isActive }) =>
+          isActive || (!story && pathname.includes("/questions/"))
+            ? "active"
+            : ""
+        }
+      >
+        Questions & Responses
+      </NavLink>
+      <NavLink
+        to="/behavioral/stories"
+        className={({ isActive }) => (isActive || story ? "active" : "")}
+      >
+        Story Bank
+      </NavLink>
+      <NavLink to="/behavioral/coverage">Coverage</NavLink>
+    </nav>
+  );
+}
 export default function Behavioral(
   props: PageProps & { view?: "questions" | "stories" | "coverage" },
 ) {
@@ -70,13 +95,7 @@ export default function Behavioral(
           )
         }
       />
-      <nav className="tabs behavioral-tabs" aria-label="Behavioral sections">
-        <NavLink end to="/behavioral">
-          Questions & Responses
-        </NavLink>
-        <NavLink to="/behavioral/stories">Story Bank</NavLink>
-        <NavLink to="/behavioral/coverage">Coverage</NavLink>
-      </nav>
+      <BehavioralTabs />
       {view === "coverage" ? (
         <div className="record-grid story-grid">
           {categoryMap(data.behavioral_stories, data.behavioral_questions).map(
@@ -169,11 +188,13 @@ export default function Behavioral(
                     </p>
                   )}
                   <div className="theme-tags">
-                    {tags(isStory ? r.useful_angles : r.category).map((t) => (
-                      <span key={t}>{t}</span>
-                    ))}
+                    {tags(isStory ? r.useful_angles : r.category)
+                      .slice(0, isStory ? 3 : undefined)
+                      .map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
                   </div>
-                  {r.leadership_principles && (
+                  {!isStory && r.leadership_principles && (
                     <div className="theme-tags story-lps">
                       {tags(r.leadership_principles, ";").map((t) => (
                         <span key={t}>LP · {t}</span>
@@ -233,6 +254,7 @@ export function BehavioralDetail(
           </button>
         }
       />
+      <BehavioralTabs story={isStory} />
       <p className="story-help">
         {isStory
           ? "Keep rough facts and context here. Specific interview answers live in Questions & Responses."
@@ -267,38 +289,107 @@ export function BehavioralDetail(
             )}
           </section>
         )}
-        {(isStory ? storySections : questionSections).map(([label, key]) => (
-          <section className="story-section" key={key}>
-            <div className="section-heading">
-              <h2>{label}</h2>
-              <button
-                onClick={() =>
-                  props.edit({ table, record: row, fieldKeys: [key] })
-                }
-              >
-                Edit {label.toLowerCase()}
-              </button>
-            </div>
-            {["useful_angles", "leadership_principles"].includes(key) ? (
-              <div className="theme-tags">
-                {tags(
-                  row[key],
-                  key === "leadership_principles" ? ";" : ",",
-                ).map((t) => (
-                  <span key={t}>{t}</span>
-                ))}
-                {!row[key] && <p>No tags yet.</p>}
-              </div>
-            ) : (
-              <p className="preserve">
-                {row[key] ||
-                  (key === "response"
-                    ? "Draft the full answer you would say aloud."
-                    : "Add notes when you’re ready.")}
+        {isStory && (
+          <>
+            {[
+              ["Summary", ["short_summary"]],
+              ["What happened", ["context"]],
+              ["My contribution", ["my_ownership", "important_actions"]],
+              ["Outcome & learnings", ["impact", "learnings"]],
+              ["Notes", ["notes"]],
+            ].map(([label, keys]) => (
+              <section className="story-section" key={String(label)}>
+                <div className="section-heading">
+                  <h2>{label}</h2>
+                  <button
+                    onClick={() =>
+                      props.edit({
+                        table,
+                        record: row,
+                        fieldKeys: keys as string[],
+                      })
+                    }
+                  >
+                    Edit
+                  </button>
+                </div>
+                {(keys as string[])
+                  .filter((key) => row[key])
+                  .map((key) => (
+                    <div key={key}>
+                      <p className="preserve">{row[key]}</p>
+                    </div>
+                  ))}
+                {!(keys as string[]).some((key) => row[key]) && (
+                  <p className="story-help">Add a few rough notes.</p>
+                )}
+              </section>
+            ))}
+            <details className="story-section story-extras">
+              <summary>More details & tags</summary>
+              <p className="story-help">
+                Optional technical detail and ways to frame this experience.
               </p>
-            )}
-          </section>
-        ))}
+              {storySections
+                .filter(([, key]) =>
+                  [
+                    "technical_details",
+                    "challenges",
+                    "useful_angles",
+                    "leadership_principles",
+                  ].includes(key),
+                )
+                .map(([label, key]) => (
+                  <div className="story-extra-row" key={key}>
+                    <div className="section-heading">
+                      <h3>{label}</h3>
+                      <button
+                        onClick={() =>
+                          props.edit({ table, record: row, fieldKeys: [key] })
+                        }
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    <p className="preserve">{row[key] || "Not added"}</p>
+                  </div>
+                ))}
+            </details>
+          </>
+        )}
+        {!isStory &&
+          questionSections.map(([label, key]) => (
+            <section className="story-section" key={key}>
+              <div className="section-heading">
+                <h2>{label}</h2>
+                <button
+                  onClick={() =>
+                    props.edit({ table, record: row, fieldKeys: [key] })
+                  }
+                >
+                  Edit {label.toLowerCase()}
+                </button>
+              </div>
+              {["useful_angles", "leadership_principles"].includes(key) ? (
+                <div className="theme-tags">
+                  {tags(
+                    row[key],
+                    key === "leadership_principles" ? ";" : ",",
+                  ).map((t) => (
+                    <span key={t}>{t}</span>
+                  ))}
+                  {!row[key] && <p>No tags yet.</p>}
+                </div>
+              ) : (
+                <p className="preserve">
+                  {row[key] ||
+                    (key === "response"
+                      ? "Draft the full answer you would say aloud."
+                      : "Add notes when you’re ready.")}
+                </p>
+              )}
+            </section>
+          ))}
         {isStory && (
           <section className="story-section">
             <h2>Questions using this story</h2>
