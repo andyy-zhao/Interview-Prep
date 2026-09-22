@@ -112,7 +112,7 @@ export default function Progress({ data }: PageProps) {
           <h2>Behavioral stories</h2>
           <p>{data.behavioral_stories.length} stories in your bank</p>
           <ProgressBar
-            label="Interview-ready"
+            label="Strong stories"
             value={
               data.behavioral_stories.filter((s) => s.status === "strong")
                 .length
@@ -124,7 +124,7 @@ export default function Progress({ data }: PageProps) {
           <h2>Achievers experience</h2>
           <p>{data.achievers_projects.length} projects documented</p>
           <ProgressBar
-            label="Interview-ready"
+            label="Strong stories"
             value={
               data.achievers_projects.filter((p) => p.interview_ready).length
             }
