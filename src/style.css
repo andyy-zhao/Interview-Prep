@@ -1313,3 +1313,27 @@ body:has(dialog[open]) {
     grid-template-columns: 1fr;
   }
 }
+
+.library-sortbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+  color: #7b8b80;
+  font-size: 13px;
+}
+.library-sortbar label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.library-sortbar select {
+  padding: 9px 12px;
+  border: 1px solid #dce4dd;
+  border-radius: 8px;
+  background: white;
+  color: #23352f;
+  max-width: 100%;
+}

@@ -1,3 +1,8 @@
+import {
+  problemSorts,
+  sortProblems,
+  type ProblemSort,
+} from "../domain/problem-sorting";
 import { formatAttemptDuration } from "../domain/attempts";
 import { useState, useEffect, useRef } from "react";
 import { X, ArrowUpRight, Search } from "lucide-react";
@@ -19,31 +24,37 @@ const meanings = {
 export default function Library(props: PageProps) {
   const { data, edit, mutate, configured, busy } = props;
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [sort, setSort] = useState<ProblemSort>("review_priority");
   const [selected, setSelected] = useState<string | null>(null);
   const all = data.leetcode_problems;
   const due = (p: RecordData) =>
     !!p.active &&
     !!p.next_review_date &&
     String(p.next_review_date) <= dateKey();
-  const problems = all.filter((p) =>
-    Object.entries(filters).every(
-      ([k, v]) =>
-        !v ||
-        (k === "search"
-          ? String(p.title).toLowerCase().includes(v.toLowerCase())
-          : k === "review"
-            ? v === "due"
-              ? due(p)
-              : v === "inactive"
-                ? !p.active
-                : p.active
-            : k === "topics"
-              ? String(p.topics || "")
-                  .split(",")
-                  .map((x) => x.trim())
-                  .includes(v)
-              : p[k] === v),
+  const problems = sortProblems(
+    all.filter((p) =>
+      Object.entries(filters).every(
+        ([k, v]) =>
+          !v ||
+          (k === "search"
+            ? String(p.title).toLowerCase().includes(v.toLowerCase())
+            : k === "review"
+              ? v === "due"
+                ? due(p)
+                : v === "inactive"
+                  ? !p.active
+                  : p.active
+              : k === "topics"
+                ? String(p.topics || "")
+                    .split(",")
+                    .map((x) => x.trim())
+                    .includes(v)
+                : p[k] === v),
+      ),
     ),
+    sort,
+    dateKey(),
+    data.leetcode_attempts,
   );
   const selectedProblem = all.find((p) => p.id === selected);
   return (
@@ -150,6 +161,24 @@ export default function Library(props: PageProps) {
         {Object.values(filters).some(Boolean) && (
           <button onClick={() => setFilters({})}>Clear</button>
         )}
+      </div>
+      <div className="library-sortbar">
+        <span>
+          {problems.length} of {all.length} problems
+        </span>
+        <label>
+          Sort by
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as ProblemSort)}
+          >
+            {Object.entries(problemSorts).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       {!problems.length ? (
         <Empty
