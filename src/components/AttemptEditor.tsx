@@ -32,6 +32,7 @@ export function AttemptEditor({
     perceived_difficulty: "Medium",
     mastery_after: (problem.mastery as AttemptInput["mastery_after"]) || "RED",
     review_action: "normal",
+    review_mode: "automatic",
     notes: "",
     next_review_date: suggestedReview(
       problem,
@@ -69,6 +70,7 @@ export function AttemptEditor({
           : value.mastery_after;
     change({
       review_action: action,
+      review_mode: "automatic",
       mastery_after: mastery,
       next_review_date: suggestedReview(problem, mastery, action),
     });
@@ -175,6 +177,7 @@ export function AttemptEditor({
                   change({
                     mastery_after: mastery,
                     review_action: "normal",
+                    review_mode: "automatic",
                     next_review_date: suggestedReview(
                       problem,
                       mastery,
@@ -346,13 +349,18 @@ export function AttemptEditor({
                 disabled={value.review_action === "easy"}
                 required={value.review_action !== "easy"}
                 value={value.next_review_date || ""}
-                onChange={(e) => change({ next_review_date: e.target.value })}
+                onChange={(e) =>
+                  change({
+                    next_review_date: e.target.value,
+                    review_mode: "custom",
+                  })
+                }
               />
             </label>
             <p>
               {value.review_action === "easy"
                 ? "This problem will leave the active learning queue. Its history stays intact."
-                : "A review will appear on Today when it is due."}
+                : "Normal scheduling preserves a later planned review. Change the date or use a quick action to reschedule it."}
             </p>
           </div>
         </fieldset>

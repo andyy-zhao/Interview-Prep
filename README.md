@@ -34,7 +34,7 @@ Replace the example dates and tasks with your actual schedule. The seed command 
 
 ## Review behavior
 
-A new problem can be due immediately (Day 0). Recording an attempt or completing a due review writes immutable history and advances the schedule atomically by 1, 2, 4, 7, then 14 days. That yields Day 1, 3, 7, 14 after the initial session. RED/ORANGE attempts restart the sequence. The sequence is based on actual completion day, so overdue reviews don't stack up.
+A new problem can be due immediately (Day 0). Recording an attempt or completing a due review writes immutable history and advances the schedule atomically by 1, 2, 4, 7, then 14 days for non-GREEN problems. GREEN defaults to 14 days. That yields Day 1, 3, 7, 14 after the initial session. RED/ORANGE attempts restart the sequence. The sequence is based on actual completion day, so overdue reviews don't stack up.
 
 - **Too Easy:** GREEN, inactive, no next review; history retained.
 - **Got Stuck:** RED, active, due today, reset review stage.
@@ -83,3 +83,9 @@ One attempt per task is enforced with a unique partial index and row locking, in
 Run `node scripts/session-check.mjs` against the running API for live session integration checks. It inserts uniquely identified temporary records and removes only those fixtures. Override `TEST_API_URL` if needed. For an isolated dev check, both the API and Vite proxy accept `API_PORT`.
 
 For seconds precision, also run `supabase/migrations/20260921223334_attempt_duration_seconds.sql`. Enter minutes and seconds (0–59) separately; old attempts retain their original minutes with zero seconds.
+
+## Review-date protection
+
+Apply `supabase/migrations/20260922124024_preserve_planned_review_dates.sql`. GREEN attempts and completed GREEN reviews default to 14 days. Normal practice preserves any later review already planned. Explicit date edits and quick actions intentionally override that protection. “Got Stuck” schedules today; “Review Later” tomorrow; “Mark Mastered” 14 days; “Too Easy” removes active reviews.
+
+The client sends automatic versus custom review mode, so an old open form cannot accidentally replace a later database date with its automatic suggestion. Before submitting an attempt, the client verifies the backend workflow version and stops with a restart message if an old backend is running. Run `node scripts/review-schedule-check.mjs` to verify these rules against temporary data.

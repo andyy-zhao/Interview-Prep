@@ -96,3 +96,32 @@ test("seconds validate and old minute-only durations stay compatible", () => {
     "0m 45s",
   );
 });
+
+test("GREEN starts at fourteen days, regardless of review stage", () => {
+  for (const stage of [0, 1, 2, 4])
+    assert.equal(
+      suggestedReview(
+        { id: "p", review_stage: stage },
+        "GREEN",
+        "normal",
+        "2026-09-22",
+      ),
+      "2026-10-06",
+    );
+});
+test("normal practice preserves later plans while explicit actions may move them", () => {
+  const p = { id: "p", review_stage: 0, next_review_date: "2026-10-20" };
+  assert.equal(
+    suggestedReview(p, "GREEN", "normal", "2026-09-22"),
+    "2026-10-20",
+  );
+  assert.equal(
+    suggestedReview(p, "YELLOW", "normal", "2026-09-22"),
+    "2026-10-20",
+  );
+  assert.equal(suggestedReview(p, "RED", "stuck", "2026-09-22"), "2026-09-22");
+  assert.equal(
+    suggestedReview(p, "YELLOW", "later", "2026-09-22"),
+    "2026-09-23",
+  );
+});

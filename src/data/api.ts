@@ -16,8 +16,21 @@ export const api = {
     request("/" + table, { method: "POST", body: JSON.stringify(data) }),
   remove: (table: Table, id: string) =>
     request("/" + table + "/" + id, { method: "DELETE" }),
-  attempt: (data: AttemptInput) =>
-    request("/attempt", { method: "POST", body: JSON.stringify(data) }),
+  attempt: async (data: AttemptInput) => {
+    let health;
+    try {
+      health = await request("/health");
+    } catch {
+      throw new Error(
+        "The backend is outdated or unavailable. Restart npm run dev before saving. Your input has been kept.",
+      );
+    }
+    if (health.workflowVersion !== 3)
+      throw new Error(
+        "Restart npm run dev to load the latest session and review logic. Your input has been kept.",
+      );
+    return request("/attempt", { method: "POST", body: JSON.stringify(data) });
+  },
   review: (id: string) => request("/review/" + id, { method: "POST" }),
   quick: (id: string, action: string) =>
     request("/quick/" + id, {

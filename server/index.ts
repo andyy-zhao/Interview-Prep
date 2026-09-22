@@ -28,6 +28,7 @@ const db =
         auth: { persistSession: false, autoRefreshToken: false },
       })
     : null;
+app.get("/api/health", (_req, res) => res.json({ workflowVersion: 3 }));
 app.get("/api/data", async (_req, res) => {
   if (!db) return res.json({ configured: false });
   try {

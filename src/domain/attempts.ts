@@ -25,6 +25,7 @@ export const attemptSchema = z
     average_case_complexity: z.string().max(1000).nullable().optional(),
     worst_case_complexity: z.string().max(1000).nullable().optional(),
     complexity_explanation: z.string().max(100000).nullable().optional(),
+    review_mode: z.enum(["automatic", "custom"]).optional(),
     review_action: z
       .enum(["normal", "easy", "stuck", "later", "mastered"])
       .default("normal"),
@@ -75,10 +76,20 @@ export function suggestedReview(
   if (action === "stuck") return today;
   if (action === "later") return addDays(today, 1);
   if (action === "mastered") return addDays(today, 14);
-  return nextReview(
-    today,
-    ["RED", "ORANGE"].includes(mastery) ? 0 : Number(problem.review_stage || 0),
-  );
+  const suggested =
+    mastery === "GREEN"
+      ? addDays(today, 14)
+      : nextReview(
+          today,
+          ["RED", "ORANGE"].includes(mastery)
+            ? 0
+            : Number(problem.review_stage || 0),
+        );
+  // Ordinary practice must not silently pull a later planned review forward.
+  return problem.next_review_date &&
+    String(problem.next_review_date) > suggested
+    ? String(problem.next_review_date)
+    : suggested;
 }
 export function sessionAttempt(attempts: RecordData[], task: RecordData) {
   return attempts.find((a) => a.task_id === task.id);
