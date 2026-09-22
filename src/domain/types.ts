@@ -6,6 +6,7 @@ export const tables = [
   "system_design_topics",
   "system_design_exercises",
   "behavioral_stories",
+  "behavioral_questions",
   "achievers_projects",
 ] as const;
 export type Table = (typeof tables)[number];

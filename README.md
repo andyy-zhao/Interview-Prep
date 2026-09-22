@@ -90,10 +90,14 @@ Apply `supabase/migrations/20260922124024_preserve_planned_review_dates.sql`. GR
 
 The client sends automatic versus custom review mode, so an old open form cannot accidentally replace a later database date with its automatic suggestion. Before submitting an attempt, the client verifies the backend workflow version and stops with a restart message if an old backend is running. Run `node scripts/review-schedule-check.mjs` to verify these rules against temporary data.
 
-### STAR Story Bank
+### Behavioral: Questions & Responses and Story Bank
 
-Behavioral now opens the Story Bank. `/behavioral/:id` is the permanent story detail page; each section can be edited and saved independently using the existing editor. Only title and status are required. Question mapping shows all suggested/custom categories, including gaps, and links to the same underlying stories.
+`/behavioral` defaults to Questions & Responses; `/behavioral/questions/:id` holds the exact answer, optional STAR sections, notes, category, LPs, and a nullable story link. `/behavioral/stories` and `/behavioral/stories/:id` hold factual experiences; `/behavioral/coverage` is an optional lightweight category overview. Old `/behavioral/:id` story links still work.
 
-Apply `supabase/migrations/20260922221600_star_story_bank.sql` to extend `behavioral_stories` and seed seven supplied rough stories. Existing records, themes, lessons, confidence, RLS, and timestamp triggers are preserved. The new fields are `short_summary`, `company`, `project_name`, `leadership_principles`, and `notes`. Existing status values map to Rough Idea, STAR Draft, Polished, and Interview Ready; `themes` stores question categories and `lessons` stores Learnings. Categories retain comma-separated storage; Leadership Principles use semicolons so “Are Right, A Lot” stays intact.
+Apply migrations in order, including `20260922221600_star_story_bank.sql` and `20260922222639_behavioral_questions_and_experiences.sql`. The latter introduces private `behavioral_questions`, with an indexed nullable story foreign key (`ON DELETE SET NULL`). Linking does not copy content; deleting a story preserves question drafts. Existing story columns are renamed to context, my_ownership, important_actions, impact, learnings, and useful_angles, retaining their content. Technical details and challenges are added. Story stages are Idea/Developed/Strong; question stages are Idea/Rough Draft/Refined/Interview Ready.
 
-Access remains the app's existing private single-user model: loopback API with server-only credentials; no anon/authenticated table grants. There is no separate shared or public story workflow.
+The migration moves question-shaped legacy records into questions while retaining their authored notes. The requested initial question is linked to the existing batch-processing platform record. If the old question is absent, its surviving Situation context is preserved from that story once; Full Response stays empty. No additional example stories or questions are generated.
+
+Both models reuse the existing optional-fields editor and explicit Save flow. Categories/angles use comma-separated text; LPs use semicolons so “Are Right, A Lot” stays intact. Access remains the existing private single-user loopback API and server-only credentials, with RLS enabled and no anon/authenticated grants.
+
+Verification: `npm exec tsc -- -b`, `npm run lint`, `npm test`, `npm run build`; live temporary-fixture checks: `node scripts/story-bank-check.mjs` and `node scripts/behavioral-questions-check.mjs`.

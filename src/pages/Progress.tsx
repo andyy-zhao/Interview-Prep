@@ -114,9 +114,8 @@ export default function Progress({ data }: PageProps) {
           <ProgressBar
             label="Interview-ready"
             value={
-              data.behavioral_stories.filter(
-                (s) => s.status === "interview-ready",
-              ).length
+              data.behavioral_stories.filter((s) => s.status === "strong")
+                .length
             }
             total={data.behavioral_stories.length}
           />

@@ -21,31 +21,31 @@ try {
     (s) => s.id === id,
   );
   assert.ok(row);
-  assert.equal(row.situation, null);
+  assert.equal(row.context, null);
   await request("/behavioral_stories", "POST", {
     ...row,
-    action: "Test action only",
-    themes: "Ownership, Dive Deep",
+    important_actions: "Test important_actions only",
+    useful_angles: "Ownership, Dive Deep",
     leadership_principles: "Are Right, A Lot; Dive Deep",
   });
   row = (await request("/data")).data.behavioral_stories.find(
     (s) => s.id === id,
   );
-  assert.equal(row.action, "Test action only");
-  assert.equal(row.themes, "Ownership, Dive Deep");
+  assert.equal(row.important_actions, "Test important_actions only");
+  assert.equal(row.useful_angles, "Ownership, Dive Deep");
   assert.equal(row.leadership_principles, "Are Right, A Lot; Dive Deep");
-  assert.equal(row.situation, null);
+  assert.equal(row.context, null);
   await request("/behavioral_stories", "POST", {
     ...row,
     notes: "Refined later",
-    status: "refined",
+    status: "strong",
   });
   row = (await request("/data")).data.behavioral_stories.find(
     (s) => s.id === id,
   );
-  assert.equal(row.action, "Test action only");
+  assert.equal(row.important_actions, "Test important_actions only");
   assert.equal(row.notes, "Refined later");
-  assert.equal(row.status, "refined");
+  assert.equal(row.status, "strong");
   console.log(
     "PASS: rough creation, persistent STAR edits, category/LP round-trip, status and preserved sections",
   );

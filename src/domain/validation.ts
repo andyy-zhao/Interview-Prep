@@ -16,7 +16,7 @@ export function schemaFor(table: Table) {
         .int()
         .min(f.key === "confidence" ? 1 : 0)
         .max(f.key === "confidence" ? 5 : 100000);
-    else if (f.type === "problem") s = z.string().uuid();
+    else if (f.type === "problem" || f.type === "story") s = z.string().uuid();
     else if (f.type === "date")
       s = z
         .string()

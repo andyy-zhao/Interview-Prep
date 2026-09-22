@@ -1,4 +1,4 @@
-import Stories, { StoryDetail } from "./pages/Stories";
+import Behavioral, { BehavioralDetail } from "./pages/Stories";
 import { AttemptEditor } from "./components/AttemptEditor";
 import { AttemptDetails } from "./components/AttemptDetails";
 import { attemptSchema } from "./domain/attempts";
@@ -47,6 +47,7 @@ const empty = {
   system_design_topics: [],
   system_design_exercises: [],
   behavioral_stories: [],
+  behavioral_questions: [],
   achievers_projects: [],
 };
 export default function App() {
@@ -263,7 +264,26 @@ export default function App() {
                 path="/system-design"
                 element={<Collections key="system" kind="system" {...props} />}
               />
-              <Route path="/behavioral" element={<Stories {...props} />} />
+              <Route
+                path="/behavioral/stories"
+                element={<Behavioral key="stories" view="stories" {...props} />}
+              />
+              <Route
+                path="/behavioral/coverage"
+                element={<Behavioral view="coverage" {...props} />}
+              />
+              <Route
+                path="/behavioral/stories/:id"
+                element={<BehavioralDetail kind="story" {...props} />}
+              />
+              <Route
+                path="/behavioral/questions/:id"
+                element={<BehavioralDetail kind="question" {...props} />}
+              />
+              <Route
+                path="/behavioral"
+                element={<Behavioral key="questions" {...props} />}
+              />
               <Route
                 path="/achievers"
                 element={
@@ -272,7 +292,7 @@ export default function App() {
               />
               <Route
                 path="/behavioral/:id"
-                element={<StoryDetail {...props} />}
+                element={<BehavioralDetail kind="story" {...props} />}
               />
               <Route path="/progress" element={<Progress {...props} />} />
               <Route
@@ -331,6 +351,7 @@ export default function App() {
             key={spec.record?.id || spec.table}
             spec={spec}
             problems={data.leetcode_problems}
+            stories={data.behavioral_stories}
             configured={configured}
             onClose={() => setSpec(null)}
             onSave={async (table, row) => run(() => save(table, row))}

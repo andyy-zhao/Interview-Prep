@@ -18,16 +18,16 @@ test("story fields survive validation and unrelated fields are stripped", () => 
   const input = {
     id,
     title: "Story",
-    status: "refined",
+    status: "strong",
     short_summary: "Summary",
     company: "Achievers",
     project_name: "Project",
-    situation: "Context",
-    task: "Goal",
-    action: "My contribution",
-    result: "Impact",
-    lessons: "Learning",
-    themes: "Ownership, Dive Deep",
+    context: "Context",
+    my_ownership: "Goal",
+    important_actions: "My contribution",
+    impact: "Impact",
+    learnings: "Learning",
+    useful_angles: "Ownership, Dive Deep",
     leadership_principles: "Are Right, A Lot; Dive Deep",
     notes: "Follow up",
   };
@@ -44,7 +44,7 @@ test("mapping reuses one story across categories and exposes missing categories"
   const story = {
     id,
     title: "Story",
-    themes: "Ownership, Dive Deep, Ownership",
+    useful_angles: "Ownership, Dive Deep, Ownership",
   };
   const mapping = categoryMap([story]);
   assert.equal(
@@ -63,4 +63,29 @@ test("mapping reuses one story across categories and exposes missing categories"
     "Ownership",
     "Dive Deep",
   ]);
+});
+
+test("questions allow partial drafts and validate optional story references", () => {
+  const q = {
+    id,
+    question_text: "Tell me about ownership",
+    status: "rough",
+    linked_story_id: null,
+    response: "Draft",
+  };
+  assert.deepEqual(schemaFor("behavioral_questions").parse(q), q);
+  assert.throws(() =>
+    schemaFor("behavioral_questions").parse({
+      ...q,
+      linked_story_id: "invalid",
+    }),
+  );
+  assert.throws(() =>
+    schemaFor("behavioral_questions").parse({ ...q, question_text: " " }),
+  );
+  const mapped = categoryMap([], [{ id, category: "Ownership" }]);
+  assert.equal(
+    mapped.find((m) => m.category === "Ownership")!.questions.length,
+    1,
+  );
 });

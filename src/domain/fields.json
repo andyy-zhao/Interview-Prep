@@ -288,11 +288,6 @@
       "required": true
     },
     {
-      "key": "short_summary",
-      "label": "Overview / short summary",
-      "type": "textarea"
-    },
-    {
       "key": "company",
       "label": "Company / experience source",
       "type": "text"
@@ -308,40 +303,54 @@
       "type": "select",
       "options": [
         "idea",
-        "rough",
-        "refined",
-        "interview-ready"
+        "developed",
+        "strong"
       ],
       "required": true
     },
     {
-      "key": "situation",
-      "label": "Situation",
+      "key": "short_summary",
+      "label": "Overview / short summary",
       "type": "textarea"
     },
     {
-      "key": "task",
-      "label": "Task",
+      "key": "context",
+      "label": "Context / background",
       "type": "textarea"
     },
     {
-      "key": "action",
-      "label": "Action",
+      "key": "my_ownership",
+      "label": "My ownership",
       "type": "textarea"
     },
     {
-      "key": "result",
-      "label": "Result",
+      "key": "important_actions",
+      "label": "Important actions",
       "type": "textarea"
     },
     {
-      "key": "lessons",
+      "key": "technical_details",
+      "label": "Technical details",
+      "type": "textarea"
+    },
+    {
+      "key": "challenges",
+      "label": "Challenges",
+      "type": "textarea"
+    },
+    {
+      "key": "impact",
+      "label": "Impact",
+      "type": "textarea"
+    },
+    {
+      "key": "learnings",
       "label": "Learnings",
       "type": "textarea"
     },
     {
-      "key": "themes",
-      "label": "Question categories",
+      "key": "useful_angles",
+      "label": "Useful angles",
       "type": "tags",
       "options": [
         "Ambiguity",
@@ -497,6 +506,99 @@
       "key": "interview_ready",
       "label": "Interview-ready",
       "type": "checkbox"
+    }
+  ],
+  "behavioral_questions": [
+    {
+      "key": "question_text",
+      "label": "Question",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "company",
+      "label": "Company / source",
+      "type": "text"
+    },
+    {
+      "key": "category",
+      "label": "Category",
+      "type": "text"
+    },
+    {
+      "key": "linked_story_id",
+      "label": "Linked story",
+      "type": "story"
+    },
+    {
+      "key": "status",
+      "label": "Status",
+      "type": "select",
+      "options": [
+        "idea",
+        "rough",
+        "refined",
+        "interview-ready"
+      ],
+      "required": true
+    },
+    {
+      "key": "situation",
+      "label": "Situation",
+      "type": "textarea"
+    },
+    {
+      "key": "task",
+      "label": "Task",
+      "type": "textarea"
+    },
+    {
+      "key": "action",
+      "label": "Action",
+      "type": "textarea"
+    },
+    {
+      "key": "result",
+      "label": "Result",
+      "type": "textarea"
+    },
+    {
+      "key": "learnings",
+      "label": "Learnings",
+      "type": "textarea"
+    },
+    {
+      "key": "response",
+      "label": "Full response",
+      "type": "textarea"
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "type": "textarea"
+    },
+    {
+      "key": "leadership_principles",
+      "label": "Leadership Principles",
+      "type": "tags",
+      "options": [
+        "Customer Obsession",
+        "Ownership",
+        "Invent and Simplify",
+        "Are Right, A Lot",
+        "Learn and Be Curious",
+        "Hire and Develop the Best",
+        "Insist on the Highest Standards",
+        "Think Big",
+        "Bias for Action",
+        "Frugality",
+        "Earn Trust",
+        "Dive Deep",
+        "Have Backbone; Disagree and Commit",
+        "Deliver Results",
+        "Strive to be Earth\u2019s Best Employer",
+        "Success and Scale Bring Broad Responsibility"
+      ]
     }
   ]
 }

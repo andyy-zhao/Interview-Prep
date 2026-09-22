@@ -84,5 +84,6 @@ export const demo: Store = {
   system_design_topics: [],
   system_design_exercises: [],
   behavioral_stories: [],
+  behavioral_questions: [],
   achievers_projects: [],
 };

@@ -1419,3 +1419,15 @@ body:has(dialog[open]) {
 .story-card p {
   height: auto;
 }
+.behavioral-tabs {
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.behavioral-tabs a {
+  padding: 12px 4px;
+  border-bottom: 2px solid transparent;
+}
+.behavioral-tabs a.active {
+  color: #226c52;
+  border-bottom-color: #6f9765;
+}

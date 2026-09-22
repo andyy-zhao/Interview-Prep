@@ -1,5 +1,5 @@
 import { TagPicker } from "./TagPicker";
-import { storyStatuses } from "../domain/stories";
+import { storyStatuses, questionStatuses } from "../domain/stories";
 import { useState, useRef, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 import configs from "../domain/fields.json";
@@ -21,6 +21,7 @@ export type EditSpec = {
 export function Editor({
   spec,
   problems,
+  stories,
   configured,
   onSave,
   onDelete,
@@ -28,6 +29,7 @@ export function Editor({
 }: {
   spec: EditSpec;
   problems: RecordData[];
+  stories: RecordData[];
   configured: boolean;
   onSave: (table: Table, data: RecordData) => Promise<void>;
   onDelete: (table: Table, id: string) => Promise<void>;
@@ -122,9 +124,13 @@ export function Editor({
                     ? spec.record
                       ? "Edit story"
                       : "Capture a story"
-                    : spec.record
-                      ? "Edit record"
-                      : "Add record"}
+                    : spec.table === "behavioral_questions"
+                      ? spec.record
+                        ? "Edit question"
+                        : "Add question"
+                      : spec.record
+                        ? "Edit record"
+                        : "Add record"}
             </h2>
           </div>
           <button
@@ -225,26 +231,43 @@ export function Editor({
                     <textarea
                       {...common}
                       value={display}
-                      rows={f.key === "action" ? 10 : f.key === "notes" ? 4 : 3}
+                      rows={
+                        ["action", "important_actions", "response"].includes(
+                          f.key,
+                        )
+                          ? 10
+                          : f.key === "notes"
+                            ? 4
+                            : 3
+                      }
                     />
-                  ) : f.type === "select" || f.type === "problem" ? (
+                  ) : f.type === "select" ||
+                    f.type === "problem" ||
+                    f.type === "story" ? (
                     <select {...common} value={display}>
                       {(!f.required || f.type === "problem") && (
                         <option value="">
-                          {f.type === "problem"
-                            ? "No linked problem"
-                            : "Select…"}
+                          {f.type === "story"
+                            ? "No linked story"
+                            : f.type === "problem"
+                              ? "No linked problem"
+                              : "Select…"}
                         </option>
                       )}
-                      {(f.type === "problem"
-                        ? problems.map((p) => [p.id, String(p.title)])
-                        : f.options?.map((o) => [o, o]) || []
+                      {(f.type === "story"
+                        ? stories.map((p) => [p.id, String(p.title)])
+                        : f.type === "problem"
+                          ? problems.map((p) => [p.id, String(p.title)])
+                          : f.options?.map((o) => [o, o]) || []
                       ).map(([v, l]) => (
                         <option value={v} key={v}>
                           {spec.table === "behavioral_stories" &&
                           f.key === "status"
                             ? storyStatuses[l]
-                            : l}
+                            : spec.table === "behavioral_questions" &&
+                                f.key === "status"
+                              ? questionStatuses[l]
+                              : l}
                         </option>
                       ))}
                     </select>
@@ -329,7 +352,11 @@ export function Editor({
                     ? spec.fieldKeys
                       ? "section"
                       : "story"
-                    : "record")}
+                    : spec.table === "behavioral_questions"
+                      ? spec.fieldKeys
+                        ? "section"
+                        : "question"
+                      : "record")}
           </button>
         </div>
       </form>
