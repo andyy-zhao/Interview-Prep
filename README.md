@@ -89,3 +89,11 @@ For seconds precision, also run `supabase/migrations/20260921223334_attempt_dura
 Apply `supabase/migrations/20260922124024_preserve_planned_review_dates.sql`. GREEN attempts and completed GREEN reviews default to 14 days. Normal practice preserves any later review already planned. Explicit date edits and quick actions intentionally override that protection. “Got Stuck” schedules today; “Review Later” tomorrow; “Mark Mastered” 14 days; “Too Easy” removes active reviews.
 
 The client sends automatic versus custom review mode, so an old open form cannot accidentally replace a later database date with its automatic suggestion. Before submitting an attempt, the client verifies the backend workflow version and stops with a restart message if an old backend is running. Run `node scripts/review-schedule-check.mjs` to verify these rules against temporary data.
+
+### STAR Story Bank
+
+Behavioral now opens the Story Bank. `/behavioral/:id` is the permanent story detail page; each section can be edited and saved independently using the existing editor. Only title and status are required. Question mapping shows all suggested/custom categories, including gaps, and links to the same underlying stories.
+
+Apply `supabase/migrations/20260922221600_star_story_bank.sql` to extend `behavioral_stories` and seed seven supplied rough stories. Existing records, themes, lessons, confidence, RLS, and timestamp triggers are preserved. The new fields are `short_summary`, `company`, `project_name`, `leadership_principles`, and `notes`. Existing status values map to Rough Idea, STAR Draft, Polished, and Interview Ready; `themes` stores question categories and `lessons` stores Learnings. Categories retain comma-separated storage; Leadership Principles use semicolons so “Are Right, A Lot” stays intact.
+
+Access remains the app's existing private single-user model: loopback API with server-only credentials; no anon/authenticated table grants. There is no separate shared or public story workflow.

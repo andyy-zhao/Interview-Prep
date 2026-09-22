@@ -30,6 +30,7 @@ export function schemaFor(table: Table) {
     else if (f.type === "time")
       s = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/);
     else if (f.type === "datetime-local") s = z.string().datetime();
+    else if (f.type === "tags") s = z.string().max(10000);
     else if ("options" in f && f.options)
       s = z.enum(f.options as [string, ...string[]]);
     else if (f.type === "url")

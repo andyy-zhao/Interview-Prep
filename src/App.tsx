@@ -1,3 +1,4 @@
+import Stories, { StoryDetail } from "./pages/Stories";
 import { AttemptEditor } from "./components/AttemptEditor";
 import { AttemptDetails } from "./components/AttemptDetails";
 import { attemptSchema } from "./domain/attempts";
@@ -115,7 +116,9 @@ export default function App() {
       ? api.attempt(attemptSchema.parse(row))
       : api.save(table, row);
   const path = useLocation().pathname;
-  const name = nav.find((n) => n[2] === path)?.[0] || "Not found";
+  const name = path.startsWith("/behavioral")
+    ? "Behavioral"
+    : nav.find((n) => n[2] === path)?.[0] || "Not found";
   const props = { data, configured, busy, edit: setSpec, mutate, save };
   useEffect(() => {
     type Context = {
@@ -260,17 +263,16 @@ export default function App() {
                 path="/system-design"
                 element={<Collections key="system" kind="system" {...props} />}
               />
-              <Route
-                path="/behavioral"
-                element={
-                  <Collections key="behavioral" kind="behavioral" {...props} />
-                }
-              />
+              <Route path="/behavioral" element={<Stories {...props} />} />
               <Route
                 path="/achievers"
                 element={
                   <Collections key="achievers" kind="achievers" {...props} />
                 }
+              />
+              <Route
+                path="/behavioral/:id"
+                element={<StoryDetail {...props} />}
               />
               <Route path="/progress" element={<Progress {...props} />} />
               <Route

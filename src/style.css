@@ -1337,3 +1337,85 @@ body:has(dialog[open]) {
   color: #23352f;
   max-width: 100%;
 }
+
+.story-card {
+  display: block;
+  text-align: left;
+}
+.story-card:hover {
+  border-color: #6f9765;
+}
+.story-card p {
+  white-space: pre-wrap;
+}
+.story-section {
+  background: white;
+  border: 1px solid #dce4dd;
+  border-radius: 10px;
+  padding: 24px;
+}
+.story-section h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.story-section ul {
+  padding-left: 20px;
+  list-style: disc;
+}
+.story-section li {
+  margin: 12px 0;
+  color: #226c52;
+}
+.story-detail {
+  display: grid;
+  gap: 18px;
+  max-width: 1000px;
+}
+.story-detail .section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.story-help {
+  color: #708074;
+  margin-bottom: 24px;
+}
+.story-gap {
+  color: #9b772d;
+}
+.story-tags {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 10px 0 14px;
+}
+.story-tags button {
+  font-size: 12px;
+  padding: 6px 9px;
+}
+.story-tags button.selected {
+  background: #dfebdf;
+  border-color: #6f9765;
+  color: #226c52;
+}
+.story-lps {
+  margin-top: 8px;
+}
+.story-lps span {
+  background: #edf0f8;
+}
+.story-tag-picker input {
+  min-width: 0;
+}
+.story-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+.story-card {
+  border: 1px solid #dce4dd;
+  border-radius: 10px;
+}
+.story-card p {
+  height: auto;
+}

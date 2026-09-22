@@ -1,3 +1,5 @@
+import { TagPicker } from "./TagPicker";
+import { storyStatuses } from "../domain/stories";
 import { useState, useRef, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 import configs from "../domain/fields.json";
@@ -14,6 +16,7 @@ export type EditSpec = {
   table: Table;
   record?: RecordData;
   defaults?: Partial<RecordData>;
+  fieldKeys?: string[];
 };
 export function Editor({
   spec,
@@ -57,6 +60,7 @@ export function Editor({
     };
   });
   const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
   const [error, setError] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -71,6 +75,8 @@ export function Editor({
   }
   async function save(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     setError("");
     setBusy(true);
     try {
@@ -88,6 +94,7 @@ export function Editor({
           : "Could not save. Your input is still here.",
       );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
@@ -108,9 +115,16 @@ export function Editor({
             <h2 id="record-editor-title">
               {spec.table === "leetcode_attempts"
                 ? "Record attempt"
-                : spec.record
-                  ? "Edit record"
-                  : "Add record"}
+                : spec.fieldKeys
+                  ? "Edit " +
+                    fields.find((f) => f.key === spec.fieldKeys?.[0])?.label
+                  : spec.table === "behavioral_stories"
+                    ? spec.record
+                      ? "Edit story"
+                      : "Capture a story"
+                    : spec.record
+                      ? "Edit record"
+                      : "Add record"}
             </h2>
           </div>
           <button
@@ -134,7 +148,11 @@ export function Editor({
         )}
         <div className="form-fields">
           {fields
-            .filter((f) => f.key !== "review_stage")
+            .filter(
+              (f) =>
+                f.key !== "review_stage" &&
+                (!spec.fieldKeys || spec.fieldKeys.includes(f.key)),
+            )
             .map((f) => {
               const raw = value[f.key];
               const common = {
@@ -176,11 +194,12 @@ export function Editor({
                   : f.type === "time"
                     ? String(raw || "").slice(0, 5)
                     : String(raw ?? "");
+              const Wrapper = f.type === "tags" ? "div" : "label";
               return (
-                <label
+                <Wrapper
                   key={f.key}
                   className={
-                    f.type === "textarea"
+                    f.type === "textarea" || f.type === "tags"
                       ? "full"
                       : f.type === "checkbox"
                         ? "check-label"
@@ -190,11 +209,23 @@ export function Editor({
                 >
                   {f.label}
                   {f.required && <span className="required"> *</span>}
-                  {f.type === "textarea" ? (
+                  {f.type === "tags" ? (
+                    <TagPicker
+                      label={f.label}
+                      value={display}
+                      options={f.options || []}
+                      separator={f.key === "leadership_principles" ? ";" : ","}
+                      disabled={busy}
+                      onChange={(v) => {
+                        setDirty(true);
+                        setValue({ ...value, [f.key]: v });
+                      }}
+                    />
+                  ) : f.type === "textarea" ? (
                     <textarea
                       {...common}
                       value={display}
-                      rows={f.key === "notes" ? 4 : 3}
+                      rows={f.key === "action" ? 10 : f.key === "notes" ? 4 : 3}
                     />
                   ) : f.type === "select" || f.type === "problem" ? (
                     <select {...common} value={display}>
@@ -210,7 +241,10 @@ export function Editor({
                         : f.options?.map((o) => [o, o]) || []
                       ).map(([v, l]) => (
                         <option value={v} key={v}>
-                          {l}
+                          {spec.table === "behavioral_stories" &&
+                          f.key === "status"
+                            ? storyStatuses[l]
+                            : l}
                         </option>
                       ))}
                     </select>
@@ -231,7 +265,7 @@ export function Editor({
                       max={f.key === "confidence" ? 5 : undefined}
                     />
                   )}
-                </label>
+                </Wrapper>
               );
             })}
         </div>
@@ -271,7 +305,7 @@ export function Editor({
           </div>
         )}
         <div className="modal-actions">
-          {spec.record && (
+          {spec.record && !spec.fieldKeys && (
             <button
               type="button"
               className="danger-text"
@@ -289,7 +323,13 @@ export function Editor({
             {busy
               ? "Saving…"
               : "Save " +
-                (spec.table === "leetcode_attempts" ? "attempt" : "record")}
+                (spec.table === "leetcode_attempts"
+                  ? "attempt"
+                  : spec.table === "behavioral_stories"
+                    ? spec.fieldKeys
+                      ? "section"
+                      : "story"
+                    : "record")}
           </button>
         </div>
       </form>

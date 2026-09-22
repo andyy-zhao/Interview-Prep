@@ -79,7 +79,11 @@
       "key": "difficulty",
       "label": "Difficulty",
       "type": "select",
-      "options": ["Easy", "Medium", "Hard"],
+      "options": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ],
       "required": true
     },
     {
@@ -96,7 +100,12 @@
       "key": "mastery",
       "label": "Mastery",
       "type": "select",
-      "options": ["RED", "ORANGE", "YELLOW", "GREEN"],
+      "options": [
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "GREEN"
+      ],
       "required": true
     },
     {
@@ -166,13 +175,22 @@
       "key": "perceived_difficulty",
       "label": "Perceived difficulty",
       "type": "select",
-      "options": ["Easy", "Medium", "Hard"]
+      "options": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ]
     },
     {
       "key": "mastery_after",
       "label": "Mastery after attempt",
       "type": "select",
-      "options": ["RED", "ORANGE", "YELLOW", "GREEN"],
+      "options": [
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "GREEN"
+      ],
       "required": true
     },
     {
@@ -193,7 +211,11 @@
       "key": "status",
       "label": "Learning status",
       "type": "select",
-      "options": ["Not started", "Learning", "Learned"],
+      "options": [
+        "Not started",
+        "Learning",
+        "Learned"
+      ],
       "required": true
     },
     {
@@ -224,7 +246,11 @@
       "key": "status",
       "label": "Status",
       "type": "select",
-      "options": ["Not started", "In progress", "Completed"],
+      "options": [
+        "Not started",
+        "In progress",
+        "Completed"
+      ],
       "required": true
     },
     {
@@ -262,15 +288,30 @@
       "required": true
     },
     {
-      "key": "themes",
-      "label": "Themes (comma-separated)",
+      "key": "short_summary",
+      "label": "Overview / short summary",
+      "type": "textarea"
+    },
+    {
+      "key": "company",
+      "label": "Company / experience source",
+      "type": "text"
+    },
+    {
+      "key": "project_name",
+      "label": "Project name",
       "type": "text"
     },
     {
       "key": "status",
       "label": "Status",
       "type": "select",
-      "options": ["idea", "rough", "refined", "interview-ready"],
+      "options": [
+        "idea",
+        "rough",
+        "refined",
+        "interview-ready"
+      ],
       "required": true
     },
     {
@@ -295,7 +336,77 @@
     },
     {
       "key": "lessons",
-      "label": "Lessons learned",
+      "label": "Learnings",
+      "type": "textarea"
+    },
+    {
+      "key": "themes",
+      "label": "Question categories",
+      "type": "tags",
+      "options": [
+        "Ambiguity",
+        "Conflict / Disagreement",
+        "Cross-Team Adoption",
+        "Cross-Team Collaboration",
+        "Customer Impact",
+        "Data-Driven Decision Making",
+        "Debugging",
+        "Dive Deep",
+        "End-to-End Ownership",
+        "Failure / Mistake",
+        "Full-Stack",
+        "Impact",
+        "Influencing Without Authority",
+        "Initiative",
+        "Invent / New Idea",
+        "Learning",
+        "Learning New Technology",
+        "Long-Term Thinking",
+        "Mentorship",
+        "Migration",
+        "Optimization",
+        "Ownership",
+        "Performance",
+        "Prioritization",
+        "Production Issue",
+        "Project I'm Proud Of",
+        "Reliability",
+        "Risk Management",
+        "Simplification",
+        "System Design",
+        "Technical Challenge",
+        "Technical Complexity",
+        "Technical Debt",
+        "Technical Design",
+        "Think Big"
+      ]
+    },
+    {
+      "key": "leadership_principles",
+      "label": "Leadership Principles",
+      "type": "tags",
+      "options": [
+        "Customer Obsession",
+        "Ownership",
+        "Invent and Simplify",
+        "Are Right, A Lot",
+        "Learn and Be Curious",
+        "Hire and Develop the Best",
+        "Insist on the Highest Standards",
+        "Think Big",
+        "Bias for Action",
+        "Frugality",
+        "Earn Trust",
+        "Dive Deep",
+        "Have Backbone; Disagree and Commit",
+        "Deliver Results",
+        "Strive to be Earth\u2019s Best Employer",
+        "Success and Scale Bring Broad Responsibility"
+      ]
+    },
+    {
+      "key": "notes",
+      "label": "Additional notes",
       "type": "textarea"
     },
     {
