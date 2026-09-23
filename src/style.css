@@ -1469,3 +1469,39 @@ nav.behavioral-tabs a.active {
 .story-editor-options {
   padding: 12px 28px 0;
 }
+
+.tag-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: #67776c;
+  margin-top: 16px;
+}
+.story-match-panel {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.story-match-panel .theme-tags a {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  color: #75578c;
+  background: #f0eaf6;
+}
+.story-match-panel .story-lps a {
+  color: #465c82;
+  background: #edf0f8;
+}
+.story-match-panel .theme-tags a:hover {
+  text-decoration: underline;
+}
+.story-match-panel small {
+  grid-column: 1 / -1;
+  color: #7b8b80;
+}
+@media (max-width: 700px) {
+  .story-match-panel {
+    grid-template-columns: 1fr;
+  }
+}

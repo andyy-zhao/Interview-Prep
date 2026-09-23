@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Link, NavLink, useParams, useLocation } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import {
   Heading,
   AddButton,
@@ -8,6 +14,7 @@ import {
 } from "../components/shared";
 import {
   categoryMap,
+  principleTags,
   storyStatuses,
   questionStatuses,
   tags,
@@ -45,6 +52,15 @@ export default function Behavioral(
   const { data, edit, view = "questions" } = props;
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const [params, setParams] = useSearchParams();
+  const angle = params.get("angle") || "";
+  const principle = params.get("lp") || "";
+  const filterBy = (key: string, value: string) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    setParams(next);
+  };
   const isStory = view === "stories";
   const records = isStory ? data.behavioral_stories : data.behavioral_questions;
   const statuses = isStory ? storyStatuses : questionStatuses;
@@ -53,6 +69,10 @@ export default function Behavioral(
     .filter(
       (r) =>
         (!status || r.status === status) &&
+        (!angle ||
+          tags(isStory ? r.useful_angles : r.category).includes(angle)) &&
+        (!principle ||
+          principleTags(r.leadership_principles).includes(principle)) &&
         [
           r.title,
           r.question_text,
@@ -60,6 +80,7 @@ export default function Behavioral(
           r.category,
           r.company,
           r.useful_angles,
+          r.leadership_principles,
         ].some((v) =>
           String(v || "")
             .toLowerCase()
@@ -146,6 +167,55 @@ export default function Behavioral(
                 </option>
               ))}
             </select>
+            <select
+              aria-label="Question type / useful angle"
+              value={angle}
+              onChange={(e) => filterBy("angle", e.target.value)}
+            >
+              <option value="">All question types / angles</option>
+              {[
+                ...new Set([
+                  ...records.flatMap((r) =>
+                    tags(isStory ? r.useful_angles : r.category),
+                  ),
+                  ...(angle ? [angle] : []),
+                ]),
+              ]
+                .sort()
+                .map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+            </select>
+            <select
+              aria-label="Leadership Principle"
+              value={principle}
+              onChange={(e) => filterBy("lp", e.target.value)}
+            >
+              <option value="">All Leadership Principles</option>
+              {[
+                ...new Set([
+                  ...records.flatMap((r) =>
+                    principleTags(r.leadership_principles),
+                  ),
+                  ...(principle ? [principle] : []),
+                ]),
+              ]
+                .sort()
+                .map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+            </select>
+            {(angle || principle || search || status) && (
+              <button
+                onClick={() => {
+                  setParams({});
+                  setSearch("");
+                  setStatus("");
+                }}
+              >
+                Clear filters
+              </button>
+            )}
             <span>
               {visible.length} {isStory ? "stories" : "questions"}
             </span>
@@ -187,16 +257,17 @@ export default function Behavioral(
                       )?.title || "Not linked yet"}
                     </p>
                   )}
-                  <div className="theme-tags">
-                    {tags(isStory ? r.useful_angles : r.category)
-                      .slice(0, isStory ? 3 : undefined)
-                      .map((t) => (
-                        <span key={t}>{t}</span>
-                      ))}
+                  <div className="tag-heading">
+                    {isStory ? "Useful angles" : "Question types"}
                   </div>
-                  {!isStory && r.leadership_principles && (
+                  <div className="theme-tags">
+                    {tags(isStory ? r.useful_angles : r.category).map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
+                  {r.leadership_principles && (
                     <div className="theme-tags story-lps">
-                      {tags(r.leadership_principles, ";").map((t) => (
+                      {principleTags(r.leadership_principles).map((t) => (
                         <span key={t}>LP · {t}</span>
                       ))}
                     </div>
@@ -255,6 +326,52 @@ export function BehavioralDetail(
         }
       />
       <BehavioralTabs story={isStory} />
+      <section
+        className="story-section story-match-panel"
+        aria-label="Find this example by question type or Leadership Principle"
+      >
+        {[
+          [
+            isStory ? "Useful angles / question types" : "Question types",
+            isStory ? "useful_angles" : "category",
+            "angle",
+          ],
+          ["Leadership Principles", "leadership_principles", "lp"],
+        ].map(([label, key, filter]) => (
+          <div key={key}>
+            <div className="section-heading">
+              <h3>{label}</h3>
+              <button
+                onClick={() =>
+                  props.edit({ table, record: row, fieldKeys: [key] })
+                }
+              >
+                Edit
+              </button>
+            </div>
+            <div
+              className={"theme-tags " + (filter === "lp" ? "story-lps" : "")}
+            >
+              {(filter === "lp" ? principleTags(row[key]) : tags(row[key])).map(
+                (t) => (
+                  <Link
+                    key={t}
+                    to={
+                      back +
+                      "?" +
+                      new URLSearchParams({ [filter]: t }).toString()
+                    }
+                  >
+                    {t}
+                  </Link>
+                ),
+              )}
+              {!row[key] && <span>No tags added yet</span>}
+            </div>
+          </div>
+        ))}
+        <small>Click a tag to find other examples.</small>
+      </section>
       <p className="story-help">
         {isStory
           ? "Keep rough facts and context here. Specific interview answers live in Questions & Responses."
@@ -326,18 +443,13 @@ export function BehavioralDetail(
               </section>
             ))}
             <details className="story-section story-extras">
-              <summary>More details & tags</summary>
+              <summary>Technical details & challenges</summary>
               <p className="story-help">
-                Optional technical detail and ways to frame this experience.
+                Additional background when you need it.
               </p>
               {storySections
                 .filter(([, key]) =>
-                  [
-                    "technical_details",
-                    "challenges",
-                    "useful_angles",
-                    "leadership_principles",
-                  ].includes(key),
+                  ["technical_details", "challenges"].includes(key),
                 )
                 .map(([label, key]) => (
                   <div className="story-extra-row" key={key}>
@@ -358,38 +470,42 @@ export function BehavioralDetail(
           </>
         )}
         {!isStory &&
-          questionSections.map(([label, key]) => (
-            <section className="story-section" key={key}>
-              <div className="section-heading">
-                <h2>{label}</h2>
-                <button
-                  onClick={() =>
-                    props.edit({ table, record: row, fieldKeys: [key] })
-                  }
-                >
-                  Edit {label.toLowerCase()}
-                </button>
-              </div>
-              {["useful_angles", "leadership_principles"].includes(key) ? (
-                <div className="theme-tags">
-                  {tags(
-                    row[key],
-                    key === "leadership_principles" ? ";" : ",",
-                  ).map((t) => (
-                    <span key={t}>{t}</span>
-                  ))}
-                  {!row[key] && <p>No tags yet.</p>}
+          questionSections
+            .filter(
+              ([, key]) => !["category", "leadership_principles"].includes(key),
+            )
+            .map(([label, key]) => (
+              <section className="story-section" key={key}>
+                <div className="section-heading">
+                  <h2>{label}</h2>
+                  <button
+                    onClick={() =>
+                      props.edit({ table, record: row, fieldKeys: [key] })
+                    }
+                  >
+                    Edit {label.toLowerCase()}
+                  </button>
                 </div>
-              ) : (
-                <p className="preserve">
-                  {row[key] ||
-                    (key === "response"
-                      ? "Draft the full answer you would say aloud."
-                      : "Add notes when you’re ready.")}
-                </p>
-              )}
-            </section>
-          ))}
+                {["useful_angles", "leadership_principles"].includes(key) ? (
+                  <div className="theme-tags">
+                    {tags(
+                      row[key],
+                      key === "leadership_principles" ? ";" : ",",
+                    ).map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                    {!row[key] && <p>No tags yet.</p>}
+                  </div>
+                ) : (
+                  <p className="preserve">
+                    {row[key] ||
+                      (key === "response"
+                        ? "Draft the full answer you would say aloud."
+                        : "Add notes when you’re ready.")}
+                  </p>
+                )}
+              </section>
+            ))}
         {isStory && (
           <section className="story-section">
             <h2>Questions using this story</h2>

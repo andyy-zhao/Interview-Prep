@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { categoryMap, tags } from "./stories";
+import { categoryMap, tags, principleTags } from "./stories";
 import { schemaFor } from "./validation";
 const id = "90502292-d699-4313-b384-c341a189e778";
 test("rough story requires only title and status, not STAR details", () => {
@@ -87,5 +87,14 @@ test("questions allow partial drafts and validate optional story references", ()
   assert.equal(
     mapped.find((m) => m.category === "Ownership")!.questions.length,
     1,
+  );
+});
+
+test("LP discovery recognizes primary and secondary lists without losing commas in names", () => {
+  assert.deepEqual(
+    principleTags(
+      "Primary: Dive Deep; Ownership | Secondary: Deliver Results; Are Right, A Lot; Dive Deep",
+    ),
+    ["Dive Deep", "Ownership", "Deliver Results", "Are Right, A Lot"],
   );
 });

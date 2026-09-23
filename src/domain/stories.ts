@@ -64,3 +64,15 @@ export const questionSections = [
   ["Category", "category"],
   ["Leadership Principles", "leadership_principles"],
 ] as const;
+
+// Match principles independently of optional priority labels, without changing stored notes.
+export function principleTags(value: unknown) {
+  return [
+    ...new Set(
+      String(value || "")
+        .split(/[;|]/)
+        .map((t) => t.replace(/^\s*(primary|secondary)\s*:\s*/i, "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
