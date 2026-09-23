@@ -32,14 +32,14 @@
       "label": "Start time",
       "type": "time",
       "options": null,
-      "required": true
+      "required": false
     },
     {
       "key": "end_time",
       "label": "End time",
       "type": "time",
       "options": null,
-      "required": true
+      "required": false
     },
     {
       "key": "block",

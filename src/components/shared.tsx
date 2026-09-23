@@ -2,6 +2,7 @@ import { sessionAttempt, formatAttemptDuration } from "../domain/attempts";
 import { Check, Plus, Pencil, ArrowUpRight } from "lucide-react";
 import {
   minutes,
+  taskTime,
   type RecordData,
   type Store,
   type Table,
@@ -131,8 +132,7 @@ export function TaskRow({
           {task.title}
         </strong>
         <small>
-          {String(task.start_time).slice(0, 5)} –{" "}
-          {String(task.end_time).slice(0, 5)} <span>·</span> {minutes(task)} min
+          {taskTime(task)} {task.start_time && task.end_time && <><span>·</span> {minutes(task)} min</>}
         </small>
       </button>
       {problem && (

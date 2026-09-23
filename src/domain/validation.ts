@@ -46,8 +46,8 @@ export function schemaFor(table: Table) {
   }
   const schema = z.object(shape);
   return table === "tasks"
-    ? schema.refine((v) => String(v.end_time) > String(v.start_time), {
-        message: "End time must be after start time.",
+    ? schema.refine((v) => (!v.start_time && !v.end_time) || (!!v.start_time && !!v.end_time && String(v.end_time) > String(v.start_time)), {
+        message: "Set both times with end after start, or choose Untimed.",
         path: ["end_time"],
       })
     : schema;

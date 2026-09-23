@@ -166,11 +166,13 @@ export function Editor({
             </button>
           </div>
         )}
+        {spec.table === 'tasks' && <div className="story-editor-options"><label className="check-label"><input type="checkbox" checked={!value.start_time && !value.end_time} disabled={busy} onChange={e=>{setDirty(true);setValue({...value,start_time:e.target.checked?null:'08:00',end_time:e.target.checked?null:'08:30'});}} />Untimed — do this anytime that day</label></div>}
         <div className="form-fields">
           {fields
             .filter(
               (f) =>
                 f.key !== "review_stage" &&
+                !(spec.table === "tasks" && !value.start_time && !value.end_time && ["start_time","end_time"].includes(f.key)) &&
                 (!spec.fieldKeys || spec.fieldKeys.includes(f.key)) &&
                 (spec.table !== "behavioral_stories" ||
                   spec.fieldKeys ||

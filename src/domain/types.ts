@@ -38,6 +38,7 @@ export function monday(date: string) {
   return addDays(date, -((d.getDay() + 6) % 7));
 }
 export function minutes(task: RecordData) {
+  if (!task.start_time || !task.end_time) return 0;
   const parse = (s: unknown) =>
     String(s || "00:00")
       .split(":")
@@ -47,4 +48,11 @@ export function minutes(task: RecordData) {
 }
 export function nextReview(date: string, stage: number) {
   return addDays(date, [1, 2, 4, 7, 14][Math.min(stage, 4)]);
+}
+
+export function taskTime(task: RecordData) {
+ return task.start_time && task.end_time ? `${String(task.start_time).slice(0,5)} – ${String(task.end_time).slice(0,5)}` : 'Untimed';
+}
+export function compareTaskTimes(a: RecordData, b: RecordData) {
+ return Number(!a.start_time) - Number(!b.start_time) || String(a.start_time || '').localeCompare(String(b.start_time || '')) || String(a.title || '').localeCompare(String(b.title || '')) || a.id.localeCompare(b.id);
 }

@@ -44,3 +44,15 @@ test("Task validation rejects reversed times and blank title", () => {
       .success,
   );
 });
+
+test('Untimed tasks allow neither time, reject incomplete pairs, and sort after timed tasks', async () => {
+ const {compareTaskTimes, taskTime}=await import('./types');
+ const task={id:'5ec7b8a7-3e63-437e-aabb-e17a965c8461',title:'Practice',category:'Other',scheduled_date:'2026-09-23',start_time:null,end_time:null};
+ assert.ok(schemaFor('tasks').safeParse(task).success);
+ assert.ok(!schemaFor('tasks').safeParse({...task,start_time:'08:00'}).success);
+ assert.ok(!schemaFor('tasks').safeParse({...task,end_time:'09:00'}).success);
+ assert.equal(minutes(task),0);
+ assert.equal(taskTime(task),'Untimed');
+ const timed={...task,id:'timed',start_time:'08:00',end_time:'09:00'};
+ assert.equal([task,timed].sort(compareTaskTimes)[0].id,'timed');
+});

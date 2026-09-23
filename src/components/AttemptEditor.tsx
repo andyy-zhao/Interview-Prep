@@ -1,3 +1,4 @@
+import { taskTime } from "../domain/types";
 import { useEffect, useRef, useState } from "react";
 import { X, ArrowUpRight } from "lucide-react";
 import {
@@ -114,8 +115,7 @@ export function AttemptEditor({
             <h2 id="session-title">{problem.title}</h2>
             {task && (
               <p>
-                {task.scheduled_date} · {String(task.start_time).slice(0, 5)}–
-                {String(task.end_time).slice(0, 5)}
+                {task.scheduled_date} · {taskTime(task)}
               </p>
             )}
           </div>

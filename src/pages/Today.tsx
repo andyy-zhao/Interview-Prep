@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { ArrowUpRight, Code2 } from "lucide-react";
 import { api } from "../data/api";
-import { dateKey, minutes } from "../domain/types";
+import { dateKey, minutes, compareTaskTimes } from "../domain/types";
 import {
   Heading,
   AddButton,
@@ -14,7 +14,7 @@ export default function Today(props: PageProps) {
   const { data, edit, configured, busy, mutate } = props;
   const tasks = data.tasks
     .filter((t) => t.scheduled_date === dateKey())
-    .sort((a, b) => String(a.start_time).localeCompare(String(b.start_time)));
+    .sort(compareTaskTimes);
   const done = tasks.filter((t) => t.completed).length;
   const due = data.leetcode_problems.filter(
     (p) =>
@@ -59,7 +59,7 @@ export default function Today(props: PageProps) {
                 <em>m</em>
               </>
             ),
-            note: "Time invested in what's next",
+            note: tasks.some(t=>!t.start_time) ? "Timed sessions only · untimed tasks excluded" : "Time invested in what's next",
           },
           {
             label: "Reviews due",

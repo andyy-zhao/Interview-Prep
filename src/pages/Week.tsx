@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { dateKey, monday, addDays } from "../domain/types";
+import { dateKey, monday, addDays, compareTaskTimes } from "../domain/types";
 import { Heading, Stats, TaskRow, type PageProps } from "../components/shared";
 export default function Week(props: PageProps) {
   const [start, setStart] = useState(monday(dateKey()));
@@ -95,9 +95,7 @@ export default function Week(props: PageProps) {
             <div className="task-list">
               {tasks
                 .filter((t) => t.scheduled_date === day)
-                .sort((a, b) =>
-                  String(a.start_time).localeCompare(String(b.start_time)),
-                )
+                .sort(compareTaskTimes)
                 .map((t) => (
                   <TaskRow key={t.id} task={t} props={props} />
                 ))}
