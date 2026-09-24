@@ -1,3 +1,5 @@
+import { useSearchParams } from "react-router-dom";
+import SystemDesignFramework from "../components/SystemDesignFramework";
 import { useState } from "react";
 import {
   BookOpen,
@@ -17,7 +19,9 @@ export default function Collections({
   kind,
   ...props
 }: PageProps & { kind: "system" | "behavioral" | "achievers" }) {
-  const [tab, setTab] = useState<"topics" | "exercises">("topics");
+  const [params, setParams] = useSearchParams();
+  const tab = kind === "system" && ["exercises", "framework"].includes(params.get("tab") || "") ? params.get("tab") : "topics";
+  const setTab = (value:string) => { const next = new URLSearchParams(params); next.set("tab",value); setParams(next); };
   const [search, setSearch] = useState("");
   const [theme, setTheme] = useState("");
   const table: Table =
@@ -74,7 +78,7 @@ export default function Collections({
         title={title}
         description={description}
         action={
-          <AddButton onClick={add}>
+          kind === "system" && tab === "framework" ? undefined : <AddButton onClick={add}>
             Add{" "}
             {kind === "system"
               ? tab === "topics"
@@ -112,8 +116,10 @@ export default function Collections({
             <Layers size={16} /> Exercises{" "}
             <span>{props.data.system_design_exercises.length}</span>
           </button>
+          <button role="tab" aria-selected={tab === "framework"} className={tab === "framework" ? "selected" : ""} onClick={()=>setTab("framework")}><BookOpen size={16}/> Framework</button>
         </div>
       )}
+      {kind === "system" && tab === "framework" ? <SystemDesignFramework /> : <>
       <div className="filters">
         <input
           className="standalone-search"
@@ -211,6 +217,7 @@ export default function Collections({
           ))}
         </div>
       )}
+      </>}
     </>
   );
 }

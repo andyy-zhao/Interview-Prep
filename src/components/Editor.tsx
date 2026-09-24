@@ -167,6 +167,7 @@ export function Editor({
           </div>
         )}
         {spec.table === 'tasks' && <div className="story-editor-options"><label className="check-label"><input type="checkbox" checked={!value.start_time && !value.end_time} disabled={busy} onChange={e=>{setDirty(true);setValue({...value,start_time:e.target.checked?null:'08:00',end_time:e.target.checked?null:'08:30'});}} />Untimed — do this anytime that day</label></div>}
+        {spec.table === "system_design_exercises" && <div className="story-editor-options"><a className="external-link" href="/system-design?tab=framework" target="_blank" rel="noreferrer">Open system design framework ↗</a></div>}
         <div className="form-fields">
           {fields
             .filter(

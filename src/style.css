@@ -1505,3 +1505,18 @@ nav.behavioral-tabs a.active {
     grid-template-columns: 1fr;
   }
 }
+
+.design-framework { margin-top: 24px; }
+.design-framework .section-heading { gap: 20px; flex-wrap: wrap; }
+.framework-diagram { margin: 20px 0; padding: 16px; background: white; border: 1px solid #dce4dd; border-radius: 12px; }
+.framework-diagram img { width: 100%; height: auto; display: block; }
+.framework-diagram figcaption { color: #718074; font-size: 12px; margin-top: 12px; }
+.framework-goals { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin: 20px 0; }
+.framework-goals p { background: #eaf2e7; padding: 18px; border-radius: 10px; }
+.framework-steps { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding: 0; list-style: none; }
+.framework-step-heading { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.framework-step-heading span { background:#dfebe0; color:#226c52; border-radius:50%; width:30px; height:30px; display:grid; place-items:center; font-weight:600; }
+.framework-step-heading h3 { font-size:17px; margin:0; }
+.framework-steps ul { padding-left:20px; list-style:disc; margin-top:14px; color:#67776c; }
+.framework-steps ul li { margin:8px 0; }
+@media(max-width:700px) { .framework-goals, .framework-steps { grid-template-columns:1fr; } }
